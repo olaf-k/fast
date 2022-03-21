@@ -8,12 +8,14 @@ import {
     ViewTemplate,
 } from "@microsoft/fast-element";
 import {
+    eventClick,
     eventFocusOut,
     eventKeyDown,
     keyArrowLeft,
     keyArrowRight,
     keyEnd,
     keyHome,
+    keySpace,
 } from "@microsoft/fast-web-utilities";
 import type { ColumnDefinition } from "./data-grid.js";
 import { DataGridRowTypes } from "./data-grid.options.js";
@@ -149,6 +151,28 @@ export class FASTDataGridRow extends FASTElement {
     @observable
     public cellElements: HTMLElement[];
 
+    /**
+     * If the the row is selected
+     *
+     * @internal
+     */
+    @observable
+    public selected: boolean;
+
+    /**
+     * Whether the row is selectable
+     *
+     * @internal
+     */
+    public isSelectable: boolean = false;
+
+    /**
+     * Whether click select is enabled
+     *
+     * @internal
+     */
+    public clickSelect: boolean = false;
+
     private cellsRepeatBehavior: RepeatBehavior | null = null;
     private cellsPlaceholder: Node | null = null;
 
@@ -193,6 +217,7 @@ export class FASTDataGridRow extends FASTElement {
         this.addEventListener("cell-focused", this.handleCellFocus);
         this.addEventListener(eventFocusOut, this.handleFocusout);
         this.addEventListener(eventKeyDown, this.handleKeydown);
+        this.addEventListener(eventClick, this.handleClick);
 
         this.updateRowStyle();
 
@@ -214,19 +239,22 @@ export class FASTDataGridRow extends FASTElement {
         this.removeEventListener("cell-focused", this.handleCellFocus);
         this.removeEventListener(eventFocusOut, this.handleFocusout);
         this.removeEventListener(eventKeyDown, this.handleKeydown);
+        this.removeEventListener(eventClick, this.handleClick);
     }
 
     /**
-     * Sets the selection state of the row
+     * Sets the selected state of the row
      *
      * @public
      */
-    public setSelected(selected: boolean): void {
-        const currentlySelected = this.getAttribute("aria-selected") === true;
-        if (currentlySelected === selected) {
+    public toggleSelected(newValue: boolean, e?: MouseEvent | KeyboardEvent): void {
+        // shift clicking always selects
+        const actualValue: boolean = e && e.shiftKey ? true : newValue;
+        if (!this.isSelectable || this.selected === actualValue) {
             return;
         }
-        this.$emit("selected", this);
+        this.selected = actualValue;
+        this.$emit("rowselectionchanged", e);
     }
 
     /**
@@ -277,6 +305,7 @@ export class FASTDataGridRow extends FASTElement {
                     e.preventDefault();
                 }
                 break;
+
             case keyEnd:
                 if (!e.ctrlKey) {
                     // focus last cell of the row
@@ -286,7 +315,23 @@ export class FASTDataGridRow extends FASTElement {
                     e.preventDefault();
                 }
                 break;
+
+            case keySpace:
+                e.preventDefault();
+                this.toggleSelected(e.shiftKey ? true : !this.selected, e);
+                break;
         }
+    }
+
+    /**
+     * @internal
+     */
+    public handleClick(e: MouseEvent): void {
+        if (e.defaultPrevented || !this.clickSelect) {
+            return;
+        }
+        e.preventDefault();
+        this.toggleSelected(e.shiftKey ? true : !this.selected, e);
     }
 
     private updateItemTemplate(): void {
