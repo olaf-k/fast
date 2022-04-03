@@ -21,6 +21,22 @@ import type { ColumnDefinition } from "./data-grid.js";
 import { DataGridRowTypes } from "./data-grid.options.js";
 
 /**
+ * Event detail for DataGridRow "rowselectionchanged" events
+ *
+ * @internal
+ */
+export interface DataGridRowSelectionChangedDetail {
+    // the new selected value
+    newValue: boolean;
+
+    // if the shiftKey is pressed
+    shiftKey: boolean;
+
+    // if the control key is pressed
+    ctrlKey: boolean;
+}
+
+/**
  * A Data Grid Row Custom HTML Element.
  *
  * @fires row-focused - Fires a custom 'row-focused' event when focus is on an element (usually a cell or its contents) in the row
@@ -152,22 +168,6 @@ export class FASTDataGridRow extends FASTElement {
     public cellElements: HTMLElement[];
 
     /**
-     * If the the row is selected
-     *
-     * @internal
-     */
-    @observable
-    public selected: boolean;
-
-    /**
-     * Whether the row is selectable
-     *
-     * @internal
-     */
-    @observable
-    public isSelectable: boolean = false;
-
-    /**
      * Whether click select is enabled
      *
      * @internal
@@ -248,14 +248,8 @@ export class FASTDataGridRow extends FASTElement {
      *
      * @public
      */
-    public toggleSelected(newValue: boolean, e?: MouseEvent | KeyboardEvent): void {
-        // shift clicking always selects
-        const actualValue: boolean = e && e.shiftKey ? true : newValue;
-        if (!this.isSelectable || this.selected === actualValue) {
-            return;
-        }
-        this.selected = actualValue;
-        this.$emit("rowselectionchanged", e);
+    public toggleSelected(detail: DataGridRowSelectionChangedDetail): void {
+        this.$emit("rowselectionchanged", detail);
     }
 
     /**
@@ -318,21 +312,39 @@ export class FASTDataGridRow extends FASTElement {
                 break;
 
             case keySpace:
-                e.preventDefault();
-                this.toggleSelected(e.shiftKey ? true : !this.selected, e);
+                if (this.hasAttribute("aria-selected")) {
+                    e.preventDefault();
+                    this.toggleSelected({
+                        newValue: !this.isSelected(),
+                        shiftKey: e.shiftKey,
+                        ctrlKey: e.ctrlKey,
+                    });
+                }
                 break;
         }
+    }
+
+    private isSelected(): boolean {
+        return !(this.getAttribute("aria-selected") === "false");
     }
 
     /**
      * @internal
      */
     public handleClick(e: MouseEvent): void {
-        if (e.defaultPrevented || !this.clickSelect) {
+        if (
+            e.defaultPrevented ||
+            !this.clickSelect ||
+            !this.hasAttribute("aria-selected")
+        ) {
             return;
         }
         e.preventDefault();
-        this.toggleSelected(e.shiftKey ? true : !this.selected, e);
+        this.toggleSelected({
+            newValue: !this.isSelected(),
+            shiftKey: e.shiftKey,
+            ctrlKey: e.ctrlKey,
+        });
     }
 
     private updateItemTemplate(): void {

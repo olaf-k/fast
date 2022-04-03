@@ -303,17 +303,18 @@ export class DataGrid extends FoundationElement {
     // @internal (undocumented)
     handleRowFocus(e: Event): void;
     // (undocumented)
-    handleToggleRowSelection(e: CustomEvent): void;
+    handleRowSelectedChange(e: CustomEvent): void;
     headerCellItemTemplate?: ViewTemplate;
     noTabbing: boolean;
     rowElements: HTMLElement[];
     rowElementTag: string;
     rowItemTemplate: ViewTemplate;
     rowsData: object[];
+    selectableHeaderRow: boolean;
+    // @internal
     selectedRowIndexes: number[];
     // (undocumented)
     selectionMode: DataGridSelectionMode;
-    selectRowHeader: boolean;
     }
 
 // @public
@@ -385,8 +386,6 @@ export class DataGridRow extends FoundationElement {
     headerCellItemTemplate?: ViewTemplate;
     // @internal
     isActiveRow: boolean;
-    // @internal
-    isSelectable: boolean;
     rowData: object | null;
     // (undocumented)
     protected rowDataChanged(): void;
@@ -394,8 +393,21 @@ export class DataGridRow extends FoundationElement {
     rowType: DataGridRowTypes | "default" | "header" | "sticky-header";
     // @internal (undocumented)
     slottedCellElements: HTMLElement[];
-    toggleSelected(newValue: boolean, shiftKey: boolean, ctrlKey: boolean): void;
+    // Warning: (ae-incompatible-release-tags) The symbol "toggleSelected" is marked as @public, but its signature references "DataGridRowSelectionChangedDetail" which is marked as @internal
+    toggleSelected(detail: DataGridRowSelectionChangedDetail): void;
     }
+
+// Warning: (ae-internal-missing-underscore) The name "DataGridRowSelectionChangedDetail" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export interface DataGridRowSelectionChangedDetail {
+    // (undocumented)
+    ctrlKey: boolean;
+    // (undocumented)
+    newValue: boolean;
+    // (undocumented)
+    shiftKey: boolean;
+}
 
 // @public
 export function dataGridRowTemplate(options: CellItemTemplateOptions): ElementViewTemplate<FASTDataGridRow>;
