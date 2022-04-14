@@ -370,7 +370,7 @@ export class FASTDataGrid extends FASTElement {
     /**
      * Children that are rows
      *
-     * @public
+     * @internal
      */
     @observable
     public rowElements: HTMLElement[];
