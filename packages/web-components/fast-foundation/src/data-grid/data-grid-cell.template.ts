@@ -13,7 +13,7 @@ export function dataGridCellTemplate(): ElementViewTemplate<FASTDataGridCell> {
             role="${x =>
                 !x.cellType || x.cellType === "default" ? "gridcell" : x.cellType}"
             aria-selected="${x => x.selected}"
-            :classList=""
+            :classList="
             ${x =>
                 x.cellType === "columnheader"
                     ? "column-header"
