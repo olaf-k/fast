@@ -331,5 +331,4 @@ describe("Data grid row", () => {
 
         await disconnect();
     });
-
 });

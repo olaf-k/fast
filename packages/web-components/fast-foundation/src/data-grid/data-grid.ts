@@ -22,6 +22,7 @@ import {
 import type { FASTDataGridCell } from "./data-grid-cell.js";
 import type { FASTDataGridRow, DataGridRowSelectionChangedDetail } from "./data-grid-row.js";
 import { DataGridRowTypes, GenerateHeaderOptions } from "./data-grid.options.js";
+
 export { DataGridRowTypes, GenerateHeaderOptions };
 
 /**
@@ -234,6 +235,7 @@ export class FASTDataGrid extends FASTElement {
      * Row indexes that are not selectable.
      * Includes header rows.
      */
+    @attr({ attribute: "unselectable-row-indexes" })
     public unselectableRowIndexes: number[];
 
     /**
@@ -407,7 +409,6 @@ export class FASTDataGrid extends FASTElement {
     // flag to indicate whether the grid is actively updating focus
     // (so we don't self-trigger changes)
     private isUpdatingFocus: boolean = false;
-
     private pendingFocusUpdate: boolean = false;
 
     private observer: MutationObserver;
@@ -941,6 +942,7 @@ export class FASTDataGrid extends FASTElement {
                     ? true
                     : false;
             }
+
             if (this.columnDefinitionsStale) {
                 thisRow.columnDefinitions = this.columnDefinitions;
             }
@@ -948,6 +950,7 @@ export class FASTDataGrid extends FASTElement {
 
         this.rowindexUpdateQueued = false;
         this.columnDefinitionsStale = false;
+
         if (this.selectionUpdated) {
             this.selectionUpdated = false;
             this.$emit("selectionchanged");

@@ -60,7 +60,7 @@ export function dataGridRowTemplate(
             :classList="${x => (x.rowType !== "default" ? x.rowType : "")}"
             :defaultCellItemTemplate="${cellItemTemplate(options)}"
             :defaultHeaderCellItemTemplate="${headerCellItemTemplate(options)}"
-            aria-selected="${x => (x.isSelectable ? x.selected : void 0)}"
+            aria-selected="${x => (x.selected !== undefined ? x.selected : void 0)}"
             ${children({
                 property: "cellElements",
                 filter: elements(

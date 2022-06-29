@@ -27,6 +27,10 @@ const storyTemplate = html<DataGridArgs>`
         no-tabbing="${x => x.noTabbing}"
         generate-header="${x => x.generateHeader}"
         grid-template-columns="${x => x.gridTemplateColumns}"
+        click-select="${x => x.clickSelect}"
+        selection-mode="${x => x.selectionMode}"
+        unselectable-row-indexes="${x => x.unselectableRowIndexes}"
+        initial-row-selection="${x => x.initialRowSelection}"
     ></fast-data-grid>
 `;
 
@@ -44,6 +48,19 @@ export default {
             control: { type: "select" },
         },
         gridTemplateColumns: {
+            control: { type: "text" },
+        },
+        selectionMode: {
+            options: ["none", "single-row", "multi-row"],
+            control: { type: "select" },
+        },
+        clickSelect: {
+            control: { type: "boolean" },
+        },
+        unselectableRowIndexes: {
+            control: { type: "text" },
+        },
+        initialRowSelection: {
             control: { type: "text" },
         },
     },

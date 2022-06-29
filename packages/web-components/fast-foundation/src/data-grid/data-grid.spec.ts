@@ -1,3 +1,4 @@
+import { DOM } from "@microsoft/fast-element";
 import { expect } from "chai";
 import { fixture, uniqueElementName } from "@microsoft/fast-element/testing";
 import {
@@ -7,10 +8,10 @@ import {
     dataGridRowTemplate,
     FASTDataGridCell,
     dataGridCellTemplate
-} from "./index";
-import type { ColumnDefinition } from "./data-grid";
-import { DataGridRowTypes, GenerateHeaderOptions } from "./data-grid.options";
-import { DOM } from "@microsoft/fast-element";
+} from "./index.js";
+import type { ColumnDefinition } from "./data-grid.js";
+import { DataGridRowTypes, GenerateHeaderOptions } from "./data-grid.options.js";
+import { Updates } from "@microsoft/fast-element";
 import { keyArrowDown, keyArrowUp, keyEnd, keyHome, keySpace } from "@microsoft/fast-web-utilities";
 
 const dataGridCellName = uniqueElementName();
@@ -387,7 +388,7 @@ describe("Data grid", () => {
         element.setAttribute("initial-row-selection", "1")
 
         await connect();
-        await DOM.nextUpdate();
+        await Updates.next();
 
         const selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
 
@@ -405,7 +406,7 @@ describe("Data grid", () => {
         element.setAttribute("selection-mode", "single-row")
 
         await connect();
-        await DOM.nextUpdate();
+         await Updates.next();
 
         const selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
 
@@ -423,7 +424,7 @@ describe("Data grid", () => {
         element.setAttribute("selection-mode", "multi-row")
 
         await connect();
-        await DOM.nextUpdate();
+         await Updates.next();
 
         const selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
 
@@ -441,25 +442,25 @@ describe("Data grid", () => {
         element.setAttribute("selection-mode", "single-row")
 
         await connect();
-        await DOM.nextUpdate();
+         await Updates.next();
 
         let selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(0);
 
         (element as DataGrid).selectedRowIndexes = [1];
-        await DOM.nextUpdate();
+         await Updates.next();
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
         expect((selectedRows[0] as DataGridRow).rowIndex).to.equal(1);
 
         (element as DataGrid).selectedRowIndexes = [4];
-        await DOM.nextUpdate();
+         await Updates.next();
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
         expect((selectedRows[0] as DataGridRow).rowIndex).to.equal(4);
 
         (element as DataGrid).selectedRowIndexes = [];
-        await DOM.nextUpdate();
+         await Updates.next();
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(0);
 
@@ -473,13 +474,13 @@ describe("Data grid", () => {
         element.setAttribute("selection-mode", "single-row")
 
         await connect();
-        await DOM.nextUpdate();
+        await Updates.next();
 
         let selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(0);
 
         (element as DataGrid).selectedRowIndexes = [0];
-        await DOM.nextUpdate();
+        await Updates.next();
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(0);
 
@@ -494,13 +495,13 @@ describe("Data grid", () => {
         element.setAttribute("select-row-header", "true");
 
         await connect();
-        await DOM.nextUpdate();
+        await Updates.next();
 
         let selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(0);
 
         (element as DataGrid).selectedRowIndexes = [0];
-        await DOM.nextUpdate();
+        await Updates.next();
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
 
@@ -515,7 +516,7 @@ describe("Data grid", () => {
         element.setAttribute("select-row-header", "true");
 
         await connect();
-        await DOM.nextUpdate();
+        await Updates.next();
 
         const rows: Element[] = Array.from(element.querySelectorAll('[role="row"]'));
         let cells: Element[] = Array.from(rows[1].querySelectorAll(cellQueryString));
@@ -523,7 +524,7 @@ describe("Data grid", () => {
         (cells[0] as HTMLElement).focus();
         document.activeElement?.dispatchEvent(spaceEvent);
 
-        await DOM.nextUpdate();
+        await Updates.next();
 
         let selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
@@ -533,7 +534,7 @@ describe("Data grid", () => {
         (cells[0] as HTMLElement).focus();
         document.activeElement?.dispatchEvent(spaceEvent);
 
-        await DOM.nextUpdate();
+        await Updates.next();
 
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
@@ -541,7 +542,7 @@ describe("Data grid", () => {
 
         document.activeElement?.dispatchEvent(spaceEvent);
 
-        await DOM.nextUpdate();
+        await Updates.next();
 
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(0);
@@ -557,14 +558,14 @@ describe("Data grid", () => {
         element.setAttribute("select-row-header", "true");
 
         await connect();
-        await DOM.nextUpdate();
+        await Updates.next();
 
         const rows: Element[] = Array.from(element.querySelectorAll('[role="row"]'));
         let cells: Element[] = Array.from(rows[1].querySelectorAll(cellQueryString));
 
         (cells[0] as HTMLElement).click();
 
-        await DOM.nextUpdate();
+        await Updates.next();
 
         let selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
@@ -573,7 +574,7 @@ describe("Data grid", () => {
         cells = Array.from(rows[2].querySelectorAll(cellQueryString));
         (cells[0] as HTMLElement).click();
 
-        await DOM.nextUpdate();
+        await Updates.next();
 
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
@@ -581,7 +582,7 @@ describe("Data grid", () => {
 
         (cells[0] as HTMLElement).click();
 
-        await DOM.nextUpdate();
+        await Updates.next();
 
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(0);
@@ -596,7 +597,7 @@ describe("Data grid", () => {
         element.setAttribute("selection-mode", "multi-row");
 
         await connect();
-        await DOM.nextUpdate();
+        await Updates.next();
 
         const rows: Element[] = Array.from(element.querySelectorAll('[role="row"]'));
         let cells: Element[] = Array.from(rows[1].querySelectorAll(cellQueryString));
@@ -604,7 +605,7 @@ describe("Data grid", () => {
         (cells[0] as HTMLElement).focus();
         document.activeElement?.dispatchEvent(ctrlAEvent);
 
-        await DOM.nextUpdate();
+        await Updates.next();
 
         let selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(5);
@@ -613,7 +614,7 @@ describe("Data grid", () => {
         (cells[0] as HTMLElement).focus();
         document.activeElement?.dispatchEvent(ctrlAEvent);
 
-        await DOM.nextUpdate();
+        await Updates.next();
 
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(0);
@@ -628,7 +629,7 @@ describe("Data grid", () => {
         element.setAttribute("selection-mode", "multi-row");
 
         await connect();
-        await DOM.nextUpdate();
+        await Updates.next();
 
         const rows: Element[] = Array.from(element.querySelectorAll('[role="row"]'));
         let cells: Element[] = Array.from(rows[1].querySelectorAll(cellQueryString));
@@ -636,7 +637,7 @@ describe("Data grid", () => {
         (cells[0] as HTMLElement).focus();
         document.activeElement?.dispatchEvent(spaceEvent);
 
-        await DOM.nextUpdate();
+        await Updates.next();
 
         let selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
@@ -646,7 +647,7 @@ describe("Data grid", () => {
         (cells[0] as HTMLElement).focus();
         document.activeElement?.dispatchEvent(ctrlSpaceEvent);
 
-        await DOM.nextUpdate();
+        await Updates.next();
 
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(2);
@@ -654,7 +655,7 @@ describe("Data grid", () => {
 
         document.activeElement?.dispatchEvent(ctrlSpaceEvent);
 
-        await DOM.nextUpdate();
+        await Updates.next();
 
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
@@ -670,7 +671,7 @@ describe("Data grid", () => {
         element.setAttribute("selection-mode", "multi-row");
 
         await connect();
-        await DOM.nextUpdate();
+        await Updates.next();
 
         const rows: Element[] = Array.from(element.querySelectorAll('[role="row"]'));
         let cells: Element[] = Array.from(rows[3].querySelectorAll(cellQueryString));
@@ -678,7 +679,7 @@ describe("Data grid", () => {
         (cells[0] as HTMLElement).focus();
         document.activeElement?.dispatchEvent(spaceEvent);
 
-        await DOM.nextUpdate();
+        await Updates.next();
 
         let selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
@@ -688,7 +689,7 @@ describe("Data grid", () => {
         (cells[0] as HTMLElement).focus();
         document.activeElement?.dispatchEvent(ctrlShiftEvent);
 
-        await DOM.nextUpdate();
+        await Updates.next();
 
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(3);
@@ -698,7 +699,7 @@ describe("Data grid", () => {
         (cells[0] as HTMLElement).focus();
         document.activeElement?.dispatchEvent(ctrlShiftEvent);
 
-        await DOM.nextUpdate();
+        await Updates.next();
 
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(3);
@@ -714,7 +715,7 @@ describe("Data grid", () => {
         element.setAttribute("selection-mode", "multi-row");
 
         await connect();
-        await DOM.nextUpdate();
+        await Updates.next();
 
         const rows: Element[] = Array.from(element.querySelectorAll('[role="row"]'));
         let cells: Element[] = Array.from(rows[3].querySelectorAll(cellQueryString));
@@ -726,12 +727,12 @@ describe("Data grid", () => {
 
         (cells[0] as HTMLElement).focus();
         document.activeElement?.dispatchEvent(spaceEvent);
-        await DOM.nextUpdate();
+        await Updates.next();
         expect(wasInvoked).to.equal(true);
 
         wasInvoked = false;
         (cells[0] as HTMLElement).click();
-        await DOM.nextUpdate();
+        await Updates.next();
         expect(wasInvoked).to.equal(true);
 
         element.removeEventListener("selectionchanged", e => {
@@ -739,5 +740,4 @@ describe("Data grid", () => {
         });
         await disconnect();
     });
-
 });
