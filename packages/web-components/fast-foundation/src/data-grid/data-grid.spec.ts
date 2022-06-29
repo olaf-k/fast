@@ -487,33 +487,11 @@ describe("Data grid", () => {
         await disconnect();
     })
 
-    it("should allow selection of header row when 'select-row-header' is true" , async () => {
-        const { document, element, connect, disconnect } = await setup();
-
-        element.rowsData = newDataSet(5);
-        element.setAttribute("selection-mode", "single-row");
-        element.setAttribute("select-row-header", "true");
-
-        await connect();
-        await Updates.next();
-
-        let selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
-        expect(selectedRows.length).to.equal(0);
-
-        (element as DataGrid).selectedRowIndexes = [0];
-        await Updates.next();
-        selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
-        expect(selectedRows.length).to.equal(1);
-
-        await disconnect();
-    })
-
     it("should select and deselect rows with space bar key", async () => {
         const { document, element, connect, disconnect } = await setup();
 
         element.rowsData = newDataSet(5);
         element.setAttribute("selection-mode", "single-row");
-        element.setAttribute("select-row-header", "true");
 
         await connect();
         await Updates.next();
@@ -555,7 +533,6 @@ describe("Data grid", () => {
 
         element.rowsData = newDataSet(5);
         element.setAttribute("selection-mode", "single-row");
-        element.setAttribute("select-row-header", "true");
 
         await connect();
         await Updates.next();
