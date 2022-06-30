@@ -20,7 +20,10 @@ import {
     keyPageUp,
 } from "@microsoft/fast-web-utilities";
 import type { FASTDataGridCell } from "./data-grid-cell.js";
-import type { FASTDataGridRow, DataGridRowSelectionChangedDetail } from "./data-grid-row.js";
+import type {
+    DataGridRowSelectionChangedDetail,
+    FASTDataGridRow,
+} from "./data-grid-row.js";
 import { DataGridRowTypes, GenerateHeaderOptions } from "./data-grid.options.js";
 
 export { DataGridRowTypes, GenerateHeaderOptions };
@@ -684,7 +687,7 @@ export class FASTDataGrid extends FASTElement {
 
         if (rowMatch) {
             e.preventDefault();
-            const changedRow: DataGridRow = rowMatch as DataGridRow;
+            const changedRow: FASTDataGridRow = rowMatch as FASTDataGridRow;
             const changeEventDetail: DataGridRowSelectionChangedDetail = e.detail;
             let newSelection: number[] = this.selectedRowIndexes.slice();
             switch (this.selectionMode) {
@@ -787,7 +790,7 @@ export class FASTDataGrid extends FASTElement {
         }
         const newSelection: number[] = [];
         this.rowElements.forEach(element => {
-            newSelection.push((element as DataGridRow).rowIndex);
+            newSelection.push((element as FASTDataGridRow).rowIndex);
         });
         this.lastNotShiftSelectedRowIndex = -1;
         this.updateSelectedRows(newSelection);
@@ -799,7 +802,7 @@ export class FASTDataGrid extends FASTElement {
     }
 
     private handleSingleRowSelection(
-        changedRow: DataGridRow,
+        changedRow: FASTDataGridRow,
         detail: DataGridRowSelectionChangedDetail
     ): void {
         if (detail.newValue) {

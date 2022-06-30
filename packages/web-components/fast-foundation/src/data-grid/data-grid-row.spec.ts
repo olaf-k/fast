@@ -6,12 +6,13 @@ import { newDataRow } from "./data-grid.spec.js";
 import { keyArrowLeft, keyArrowRight, keyEnd, keyHome, keySpace } from "@microsoft/fast-web-utilities";
 
 const dataGridCellName = uniqueElementName();
+const dataGridRowName = uniqueElementName();
+
 FASTDataGridCell.define({
     name: dataGridCellName,
     template: dataGridCellTemplate()
 });
 
-const dataGridRowName = uniqueElementName();
 FASTDataGridRow.define({
     name: dataGridRowName,
     template: dataGridRowTemplate({
@@ -228,8 +229,8 @@ describe("Data grid row", () => {
             { columnDataKey: "item2" },
             { columnDataKey: "item3" },
         ] as ColumnDefinition[];
-        (element as DataGridRow).rowData = newDataRow("test");
-        (element as DataGridRow).clickSelect = true;
+        (element as FASTDataGridRow).rowData = newDataRow("test");
+        (element as FASTDataGridRow).clickSelect = true;
 
         let wasInvoked: boolean = false;
 
@@ -242,14 +243,14 @@ describe("Data grid row", () => {
         element.click();
         expect(wasInvoked).to.equal(false);
 
-        (element as DataGridRow).selected = false;
+        (element as FASTDataGridRow).selected = false;
 
         element.click();
         expect(wasInvoked).to.equal(true);
 
         wasInvoked = false;
 
-        (element as DataGridRow).selected = true;
+        (element as FASTDataGridRow).selected = true;
 
         element.click();
         expect(wasInvoked).to.equal(true);
@@ -265,7 +266,7 @@ describe("Data grid row", () => {
             { columnDataKey: "item2" },
             { columnDataKey: "item3" },
         ] as ColumnDefinition[];
-        (element as DataGridRow).rowData = newDataRow("test");
+        (element as FASTDataGridRow).rowData = newDataRow("test");
 
         let wasInvoked: boolean = false;
 
@@ -276,19 +277,19 @@ describe("Data grid row", () => {
         await connect();
 
         // clickSelect is false by default
-        expect((element as DataGridRow).clickSelect).to.equal(false);
+        expect((element as FASTDataGridRow).clickSelect).to.equal(false);
 
         element.click();
         expect(wasInvoked).to.equal(false);
 
-        (element as DataGridRow).selected = false;
+        (element as FASTDataGridRow).selected = false;
 
         element.click();
         expect(wasInvoked).to.equal(false);
 
         wasInvoked = false;
 
-        (element as DataGridRow).selected = true;
+        (element as FASTDataGridRow).selected = true;
 
         element.click();
         expect(wasInvoked).to.equal(false);
@@ -304,7 +305,7 @@ describe("Data grid row", () => {
             { columnDataKey: "item2" },
             { columnDataKey: "item3" },
         ] as ColumnDefinition[];
-        (element as DataGridRow).rowData = newDataRow("test");
+        (element as FASTDataGridRow).rowData = newDataRow("test");
 
         let wasInvoked: boolean = false;
 
@@ -317,14 +318,14 @@ describe("Data grid row", () => {
         element.dispatchEvent(spaceEvent);
         expect(wasInvoked).to.equal(false);
 
-        (element as DataGridRow).selected = false;
+        (element as FASTDataGridRow).selected = false;
 
         element.dispatchEvent(spaceEvent);
         expect(wasInvoked).to.equal(true);
 
         wasInvoked = false;
 
-        (element as DataGridRow).selected = true;
+        (element as FASTDataGridRow).selected = true;
 
         element.dispatchEvent(spaceEvent);
         expect(wasInvoked).to.equal(true);

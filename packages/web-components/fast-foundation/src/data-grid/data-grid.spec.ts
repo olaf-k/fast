@@ -15,12 +15,14 @@ import { Updates } from "@microsoft/fast-element";
 import { keyArrowDown, keyArrowUp, keyEnd, keyHome, keySpace } from "@microsoft/fast-web-utilities";
 
 const dataGridCellName = uniqueElementName();
+const dataGridRowName = uniqueElementName();
+const dataGridName = uniqueElementName();
+
 FASTDataGridCell.define({
     name: dataGridCellName,
     template: dataGridCellTemplate()
 });
 
-const dataGridRowName = uniqueElementName();
 FASTDataGridRow.define({
     name: dataGridRowName,
     template: dataGridRowTemplate({
@@ -28,7 +30,6 @@ FASTDataGridRow.define({
     })
 });
 
-const dataGridName = uniqueElementName();
 FASTDataGrid.define({
     name: dataGridName,
     template: dataGridTemplate({
@@ -393,7 +394,7 @@ describe("Data grid", () => {
         const selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
 
         expect(selectedRows.length).to.equal(0);
-        expect((element as DataGrid).selectedRowIndexes.length).to.equal(0);
+        expect((element as FASTDataGrid).selectedRowIndexes.length).to.equal(0);
 
         await disconnect();
     });
@@ -411,7 +412,7 @@ describe("Data grid", () => {
         const selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
 
         expect(selectedRows.length).to.equal(1);
-        expect((element as DataGrid).selectedRowIndexes[0]).to.equal(1);
+        expect((element as FASTDataGrid).selectedRowIndexes[0]).to.equal(1);
 
         await disconnect();
     });
@@ -429,8 +430,8 @@ describe("Data grid", () => {
         const selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
 
         expect(selectedRows.length).to.equal(2);
-        expect((element as DataGrid).selectedRowIndexes[0]).to.equal(1);
-        expect((element as DataGrid).selectedRowIndexes[1]).to.equal(2);
+        expect((element as FASTDataGrid).selectedRowIndexes[0]).to.equal(1);
+        expect((element as FASTDataGrid).selectedRowIndexes[1]).to.equal(2);
 
         await disconnect();
     });
@@ -447,19 +448,19 @@ describe("Data grid", () => {
         let selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(0);
 
-        (element as DataGrid).selectedRowIndexes = [1];
+        (element as FASTDataGrid).selectedRowIndexes = [1];
          await Updates.next();
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
-        expect((selectedRows[0] as DataGridRow).rowIndex).to.equal(1);
+        expect((selectedRows[0] as FASTDataGridRow).rowIndex).to.equal(1);
 
-        (element as DataGrid).selectedRowIndexes = [4];
+        (element as FASTDataGrid).selectedRowIndexes = [4];
          await Updates.next();
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
-        expect((selectedRows[0] as DataGridRow).rowIndex).to.equal(4);
+        expect((selectedRows[0] as FASTDataGridRow).rowIndex).to.equal(4);
 
-        (element as DataGrid).selectedRowIndexes = [];
+        (element as FASTDataGrid).selectedRowIndexes = [];
          await Updates.next();
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(0);
@@ -479,7 +480,7 @@ describe("Data grid", () => {
         let selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(0);
 
-        (element as DataGrid).selectedRowIndexes = [0];
+        (element as FASTDataGrid).selectedRowIndexes = [0];
         await Updates.next();
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(0);
@@ -506,7 +507,7 @@ describe("Data grid", () => {
 
         let selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
-        expect((element as DataGrid).selectedRowIndexes[0]).to.equal(1);
+        expect((element as FASTDataGrid).selectedRowIndexes[0]).to.equal(1);
 
         cells = Array.from(rows[2].querySelectorAll(cellQueryString));
         (cells[0] as HTMLElement).focus();
@@ -516,7 +517,7 @@ describe("Data grid", () => {
 
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
-        expect((element as DataGrid).selectedRowIndexes[0]).to.equal(2);
+        expect((element as FASTDataGrid).selectedRowIndexes[0]).to.equal(2);
 
         document.activeElement?.dispatchEvent(spaceEvent);
 
@@ -546,7 +547,7 @@ describe("Data grid", () => {
 
         let selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
-        expect((element as DataGrid).selectedRowIndexes[0]).to.equal(1);
+        expect((element as FASTDataGrid).selectedRowIndexes[0]).to.equal(1);
 
         cells = Array.from(rows[2].querySelectorAll(cellQueryString));
         (cells[0] as HTMLElement).click();
@@ -555,7 +556,7 @@ describe("Data grid", () => {
 
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
-        expect((element as DataGrid).selectedRowIndexes[0]).to.equal(2);
+        expect((element as FASTDataGrid).selectedRowIndexes[0]).to.equal(2);
 
         (cells[0] as HTMLElement).click();
 
@@ -618,7 +619,7 @@ describe("Data grid", () => {
 
         let selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
-        expect((element as DataGrid).selectedRowIndexes[0]).to.equal(1);
+        expect((element as FASTDataGrid).selectedRowIndexes[0]).to.equal(1);
 
         cells = Array.from(rows[2].querySelectorAll(cellQueryString));
         (cells[0] as HTMLElement).focus();
@@ -628,7 +629,7 @@ describe("Data grid", () => {
 
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(2);
-        expect((element as DataGrid).selectedRowIndexes[1]).to.equal(2);
+        expect((element as FASTDataGrid).selectedRowIndexes[1]).to.equal(2);
 
         document.activeElement?.dispatchEvent(ctrlSpaceEvent);
 
@@ -636,7 +637,7 @@ describe("Data grid", () => {
 
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
-        expect((element as DataGrid).selectedRowIndexes[0]).to.equal(1);
+        expect((element as FASTDataGrid).selectedRowIndexes[0]).to.equal(1);
 
         await disconnect();
     });
@@ -660,7 +661,7 @@ describe("Data grid", () => {
 
         let selectedRows: Element[] = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(1);
-        expect((element as DataGrid).selectedRowIndexes[0]).to.equal(3);
+        expect((element as FASTDataGrid).selectedRowIndexes[0]).to.equal(3);
 
         cells = Array.from(rows[1].querySelectorAll(cellQueryString));
         (cells[0] as HTMLElement).focus();
@@ -670,7 +671,7 @@ describe("Data grid", () => {
 
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(3);
-        expect((element as DataGrid).selectedRowIndexes[1]).to.equal(2);
+        expect((element as FASTDataGrid).selectedRowIndexes[1]).to.equal(2);
 
         cells = Array.from(rows[5].querySelectorAll(cellQueryString));
         (cells[0] as HTMLElement).focus();
@@ -680,7 +681,7 @@ describe("Data grid", () => {
 
         selectedRows = Array.from(element.querySelectorAll('[aria-selected="true"]'));
         expect(selectedRows.length).to.equal(3);
-        expect((element as DataGrid).selectedRowIndexes[2]).to.equal(5);
+        expect((element as FASTDataGrid).selectedRowIndexes[2]).to.equal(5);
 
         await disconnect();
     });
