@@ -221,7 +221,7 @@ describe("Data grid row", () => {
         await disconnect();
     });
 
-    it("should emit a 'rowselectionchanged' event when clicked with a selected value specified and clickSelect enabled", async () => {
+    it("should emit a 'rowselectionchange' event when clicked with a selected value specified and clickSelect enabled", async () => {
         const { element, connect, disconnect } = await setup();
 
         element.columnDefinitions = [
@@ -234,7 +234,7 @@ describe("Data grid row", () => {
 
         let wasInvoked: boolean = false;
 
-        element.addEventListener("rowselectionchanged", e => {
+        element.addEventListener("rowselectionchange", e => {
             wasInvoked = true;
         });
 
@@ -258,7 +258,7 @@ describe("Data grid row", () => {
         await disconnect();
     });
 
-    it("should emit a 'rowselectionchanged' event when clicked with clickSelect disabled", async () => {
+    it("should emit a 'rowselectionchange' event when clicked with clickSelect disabled", async () => {
         const { element, connect, disconnect } = await setup();
 
         element.columnDefinitions = [
@@ -270,7 +270,7 @@ describe("Data grid row", () => {
 
         let wasInvoked: boolean = false;
 
-        element.addEventListener("rowselectionchanged", e => {
+        element.addEventListener("rowselectionchange", e => {
             wasInvoked = true;
         });
 
@@ -297,7 +297,7 @@ describe("Data grid row", () => {
         await disconnect();
     });
 
-    it("should emit a 'rowselectionchanged' event when 'space' key pressed with a selected property is specified", async () => {
+    it("should emit a 'rowselectionchange' event when 'space' key pressed with a selected property is specified", async () => {
         const { element, connect, disconnect } = await setup();
 
         element.columnDefinitions = [
@@ -309,7 +309,7 @@ describe("Data grid row", () => {
 
         let wasInvoked: boolean = false;
 
-        element.addEventListener("rowselectionchanged", e => {
+        element.addEventListener("rowselectionchange", e => {
             wasInvoked = true;
         });
 

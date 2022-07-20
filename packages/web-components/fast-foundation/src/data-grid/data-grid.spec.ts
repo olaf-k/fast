@@ -699,7 +699,7 @@ describe("Data grid", () => {
         let cells: Element[] = Array.from(rows[3].querySelectorAll(cellQueryString));
 
         let wasInvoked: boolean = false;
-        element.addEventListener("selectionchanged", e => {
+        element.addEventListener("selectionchange", e => {
             wasInvoked = true;
         });
 
@@ -713,7 +713,7 @@ describe("Data grid", () => {
         await Updates.next();
         expect(wasInvoked).to.equal(true);
 
-        element.removeEventListener("selectionchanged", e => {
+        element.removeEventListener("selectionchange", e => {
             wasInvoked = true;
         });
         await disconnect();
