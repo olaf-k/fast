@@ -27,7 +27,7 @@ const storyTemplate = html<DataGridArgs>`
         no-tabbing="${x => x.noTabbing}"
         generate-header="${x => x.generateHeader}"
         grid-template-columns="${x => x.gridTemplateColumns}"
-        click-select="${x => x.clickSelect}"
+        disable-click-select="${x => x.disableClickSelect}"
         selection-mode="${x => x.selectionMode}"
         unselectable-row-indexes="${x => x.unselectableRowIndexes}"
         initial-row-selection="${x => x.initialRowSelection}"
@@ -54,7 +54,7 @@ export default {
             options: ["none", "single-row", "multi-row"],
             control: { type: "select" },
         },
-        clickSelect: {
+        disableClickSelect: {
             control: { type: "boolean" },
         },
         unselectableRowIndexes: {

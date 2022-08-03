@@ -164,7 +164,7 @@ export class FASTDataGridRow extends FASTElement {
      *
      * @internal
      */
-    public clickSelect: boolean = false;
+    public disableClickSelect: boolean = false;
 
     private cellsRepeatBehavior: RepeatBehavior | null = null;
     private cellsPlaceholder: Node | null = null;
@@ -323,7 +323,11 @@ export class FASTDataGridRow extends FASTElement {
      * @internal
      */
     public handleClick(e: MouseEvent): void {
-        if (e.defaultPrevented || !this.clickSelect || this.selected === undefined) {
+        if (
+            e.defaultPrevented ||
+            this.disableClickSelect ||
+            this.selected === undefined
+        ) {
             return;
         }
         e.preventDefault();

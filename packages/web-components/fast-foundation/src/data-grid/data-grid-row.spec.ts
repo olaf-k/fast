@@ -221,7 +221,7 @@ describe("Data grid row", () => {
         await disconnect();
     });
 
-    it("should emit a 'rowselectionchange' event when clicked with a selected value specified and clickSelect enabled", async () => {
+    it("should emit a 'rowselectionchange' event when clicked with a selected value specified and disableClickSelect disabled", async () => {
         const { element, connect, disconnect } = await setup();
 
         element.columnDefinitions = [
@@ -230,7 +230,7 @@ describe("Data grid row", () => {
             { columnDataKey: "item3" },
         ] as ColumnDefinition[];
         (element as FASTDataGridRow).rowData = newDataRow("test");
-        (element as FASTDataGridRow).clickSelect = true;
+        (element as FASTDataGridRow).disableClickSelect = false;
 
         let wasInvoked: boolean = false;
 
@@ -258,7 +258,7 @@ describe("Data grid row", () => {
         await disconnect();
     });
 
-    it("should emit a 'rowselectionchange' event when clicked with clickSelect disabled", async () => {
+    it("should not emit a 'rowselectionchange' event when clicked with disableClickSelect enabled", async () => {
         const { element, connect, disconnect } = await setup();
 
         element.columnDefinitions = [
@@ -267,6 +267,7 @@ describe("Data grid row", () => {
             { columnDataKey: "item3" },
         ] as ColumnDefinition[];
         (element as FASTDataGridRow).rowData = newDataRow("test");
+        (element as FASTDataGridRow).disableClickSelect = true;
 
         let wasInvoked: boolean = false;
 
@@ -275,9 +276,6 @@ describe("Data grid row", () => {
         });
 
         await connect();
-
-        // clickSelect is false by default
-        expect((element as FASTDataGridRow).clickSelect).to.equal(false);
 
         element.click();
         expect(wasInvoked).to.equal(false);
