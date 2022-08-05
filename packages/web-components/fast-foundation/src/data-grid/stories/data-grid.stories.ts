@@ -29,7 +29,6 @@ const storyTemplate = html<DataGridArgs>`
         grid-template-columns="${x => x.gridTemplateColumns}"
         disable-click-select="${x => x.disableClickSelect}"
         selection-mode="${x => x.selectionMode}"
-        unselectable-row-indexes="${x => x.unselectableRowIndexes}"
         initial-row-selection="${x => x.initialRowSelection}"
     ></fast-data-grid>
 `;
@@ -56,9 +55,6 @@ export default {
         },
         disableClickSelect: {
             control: { type: "boolean" },
-        },
-        unselectableRowIndexes: {
-            control: { type: "text" },
         },
         initialRowSelection: {
             control: { type: "text" },
