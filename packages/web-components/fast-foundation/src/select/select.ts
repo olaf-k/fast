@@ -13,7 +13,8 @@ import {
 } from "@microsoft/fast-web-utilities";
 import type { FASTListboxOption } from "../listbox-option/listbox-option.js";
 import { DelegatesARIAListbox, FASTListbox } from "../listbox/listbox.js";
-import { StartEnd, StartEndOptions } from "../patterns/index.js";
+import { StartEnd } from "../patterns/start-end.js";
+import type { StartEndOptions } from "../patterns/start-end.js";
 import { applyMixins } from "../utilities/apply-mixins.js";
 import { FormAssociatedSelect } from "./select.form-associated.js";
 import { SelectPosition } from "./select.options.js";
@@ -23,7 +24,7 @@ import { SelectPosition } from "./select.options.js";
  * @public
  */
 export type SelectOptions = StartEndOptions & {
-    indicator?: string | SyntheticViewTemplate;
+    openCloseIcon?: string | SyntheticViewTemplate;
 };
 
 /**
@@ -32,13 +33,14 @@ export type SelectOptions = StartEndOptions & {
  *
  * @slot start - Content which can be provided before the button content
  * @slot end - Content which can be provided after the button content
- * @slot button-container - The element representing the select button
+ * @slot button-container - The container for the button element
  * @slot selected-value - The selected value
- * @slot indicator - The visual indicator for the expand/collapse state of the button
+ * @slot open-close-icon - The visual indicator for the expand/collapse state of the button
+ * @slot listbox-container - The container for the listbox element
  * @slot - The default slot for slotted options
- * @csspart control - The element representing the select invoking element
+ * @csspart button - The element representing the select invoking element
  * @csspart selected-value - The element wrapping the selected value
- * @csspart indicator - The element wrapping the visual indicator
+ * @csspart open-close-icon - The element wrapping the visual indicator
  * @csspart listbox - The listbox element
  * @fires input - Fires a custom 'input' event when the value updates
  * @fires change - Fires a custom 'change' event when the value updates
@@ -112,12 +114,12 @@ export class FASTSelect extends FormAssociatedSelect {
     }
 
     /**
-     * The ref to the internal `.control` element.
+     * The ref to the internal `.button` element.
      *
      * @internal
      */
     @observable
-    public control: HTMLElement;
+    public button: HTMLElement;
 
     /**
      * The value property.

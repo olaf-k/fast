@@ -1,11 +1,8 @@
 import { attr, FASTElement, observable, Observable } from "@microsoft/fast-element";
 import { ArrowKeys, Direction, limit, Orientation } from "@microsoft/fast-web-utilities";
 import { isFocusable } from "tabbable";
-import {
-    ARIAGlobalStatesAndProperties,
-    StartEnd,
-    StartEndOptions,
-} from "../patterns/index.js";
+import { ARIAGlobalStatesAndProperties, StartEnd } from "../patterns/index.js";
+import type { StartEndOptions } from "../patterns/start-end.js";
 import { applyMixins } from "../utilities/apply-mixins.js";
 import { getDirection } from "../utilities/direction.js";
 
@@ -50,7 +47,7 @@ const ToolbarArrowKeyMap = Object.freeze({
  * @slot end - Content which can be provided after the slotted items
  * @slot - The default slot for slotted items
  * @slot label - The toolbar label
- * @csspart positioning-region - The element containing the items, start and end slots
+ * @csspart control - The element containing the items, start and end slots
  *
  * @public
  */

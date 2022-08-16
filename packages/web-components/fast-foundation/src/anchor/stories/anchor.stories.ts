@@ -79,3 +79,21 @@ Anchor.args = {
     href: "https://www.fast.design/",
     storyContent: "Anchor",
 };
+
+export const AnchorWithIcons: Story<FASTAnchor> = Anchor.bind({});
+AnchorWithIcons.args = {
+    href: "https://www.fast.design/",
+    storyContent: html`
+        <svg width="20" height="20" slot="start"><use href="#test-icon" /></svg>
+        Anchor
+        <svg width="20" height="20" slot="end"><use href="#test-icon-2" /></svg>
+    `,
+};
+
+export const AnchorWithIconOnly: Story<FASTAnchor> = Anchor.bind({});
+AnchorWithIconOnly.args = {
+    href: "https://www.fast.design/",
+    storyContent: html`
+        <svg width="20" height="20"><use href="#test-icon" /></svg>
+    `,
+};

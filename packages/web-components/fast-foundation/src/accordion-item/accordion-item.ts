@@ -4,7 +4,8 @@ import {
     nullableNumberConverter,
     SyntheticViewTemplate,
 } from "@microsoft/fast-element";
-import { StartEnd, StartEndOptions } from "../patterns/index.js";
+import { StartEnd } from "../patterns/start-end.js";
+import type { StartEndOptions } from "../patterns/start-end.js";
 import { applyMixins } from "../utilities/apply-mixins.js";
 
 /**
@@ -12,8 +13,7 @@ import { applyMixins } from "../utilities/apply-mixins.js";
  * @public
  */
 export type AccordionItemOptions = StartEndOptions & {
-    expandedIcon?: string | SyntheticViewTemplate;
-    collapsedIcon?: string | SyntheticViewTemplate;
+    expandCollapseIcon?: string | SyntheticViewTemplate;
 };
 
 /**
@@ -23,14 +23,13 @@ export type AccordionItemOptions = StartEndOptions & {
  * @slot end - Content which can be provided between the start slot and icon
  * @slot heading - Content which serves as the accordion item heading and text of the expand button
  * @slot - The default slot for accordion item content
- * @slot expanded-icon - The expanded icon
- * @slot collapsed-icon - The collapsed icon
+ * @slot expand-collapse-icon - The expanded / collapsed icon
  * @fires change - Fires a custom 'change' event when the button is invoked
  * @csspart heading - Wraps the button
  * @csspart button - The button which serves to invoke the item
  * @csspart heading-content - Wraps the slot for the heading content within the button
- * @csspart icon - The icon container
- * @csspart region - The wrapper for the accordion item content
+ * @csspart expand-collapse-icon - The icon container
+ * @csspart panel - The wrapper for the accordion item content
  *
  * @public
  */

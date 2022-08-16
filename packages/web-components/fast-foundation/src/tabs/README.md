@@ -145,10 +145,11 @@ export const myTabs = Tabs.compose({
 
 #### CSS Parts
 
-| Name              | Description                       |
-| ----------------- | --------------------------------- |
-| `tablist`         | The element wrapping for the tabs |
-| `activeIndicator` | The visual indicator              |
+| Name               | Description                        |
+| ------------------ | ---------------------------------- |
+| `tablist`          | The element wrapping the tabs      |
+| `tabpanel`         | The element wrapping the tabpanels |
+| `active-indicator` | The visual indicator               |
 
 #### Slots
 
@@ -209,11 +210,19 @@ export const myTabs = Tabs.compose({
 | ---- | -------- | -------------- |
 |      | disabled |                |
 
+#### CSS Parts
+
+| Name      | Description                                |
+| --------- | ------------------------------------------ |
+| `content` | The container for the default slot content |
+
 #### Slots
 
-| Name | Description                          |
-| ---- | ------------------------------------ |
-|      | The default slot for the tab content |
+| Name    | Description                                                 |
+| ------- | ----------------------------------------------------------- |
+| `start` | Content which can be provided before the search input       |
+| `end`   | Content which can be provided after the search clear button |
+|         | The default slot for the tab content                        |
 
 <hr/>
 

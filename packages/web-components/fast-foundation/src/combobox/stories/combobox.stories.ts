@@ -83,6 +83,15 @@ ComboboxWithBothAutocomplete.args = {
     autocomplete: ComboboxAutocomplete.both,
 };
 
+export const ComboboxWithIcons: Story<FASTCombobox> = Combobox.bind({});
+ComboboxWithIcons.args = {
+    storyContent: html`
+        <svg width="20" height="20" slot="start"><use href="#test-icon" /></svg>
+        ${repeat(x => x.storyItems, listboxOptionTemplate)}
+        <svg width="20" height="20" slot="end"><use href="#test-icon-2" /></svg>
+    `,
+};
+
 export const ComboboxInForm: Story<FASTCombobox> = renderComponent(
     html<StoryArgs<FASTCombobox>>`
         <form @submit="${() => false}">

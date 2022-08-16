@@ -89,6 +89,15 @@ export default {
 
 export const Search: Story<FASTSearch> = renderComponent(storyTemplate).bind({});
 
+export const SearchWithIcons: Story<FASTSearch> = Search.bind({});
+SearchWithIcons.args = {
+    storyContent: html`
+        <svg width="20" height="20" slot="start"><use href="#test-icon" /></svg>
+        Search
+        <svg width="20" height="20" slot="end"><use href="#test-icon-2" /></svg>
+    `,
+};
+
 export const SearchInForm: Story<FASTSearch> = renderComponent(
     html<FASTSearch>`
         <form @submit="${() => false}">

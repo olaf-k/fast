@@ -19,24 +19,35 @@ Breadcrumb.args = {
     storyContent: html`
         <fast-breadcrumb-item href="#">Breadcrumb Item 1</fast-breadcrumb-item>
         <fast-breadcrumb-item href="#">Breadcrumb Item 2</fast-breadcrumb-item>
-        <fast-breadcrumb-item href="#">Breadcrumb Item 3</fast-breadcrumb-item>
+        <fast-breadcrumb-item>Breadcrumb Item 3</fast-breadcrumb-item>
     `,
 };
 
-export const BreadcrumbWithSeparators: Story<FASTBreadcrumb> = Breadcrumb.bind({});
-BreadcrumbWithSeparators.args = {
+export const BreadcrumbWithIcons: Story<FASTBreadcrumb> = Breadcrumb.bind({});
+BreadcrumbWithIcons.args = {
+    storyContent: html`
+        <svg width="20" height="20" slot="start"><use href="#test-icon" /></svg>
+        <fast-breadcrumb-item href="#">Breadcrumb Item 1</fast-breadcrumb-item>
+        <fast-breadcrumb-item href="#">Breadcrumb Item 2</fast-breadcrumb-item>
+        <fast-breadcrumb-item>Breadcrumb Item 3</fast-breadcrumb-item>
+        <svg width="20" height="20" slot="end"><use href="#test-icon-2" /></svg>
+    `,
+};
+
+export const BreadcrumbWithSlottedSeparators: Story<FASTBreadcrumb> = Breadcrumb.bind({});
+BreadcrumbWithSlottedSeparators.args = {
     storyContent: html`
         <fast-breadcrumb-item href="#">
             Breadcrumb Item 1
-            <svg slot="separator"><use href="#test-icon" /></svg>
+            <span slot="separator">/</span>
         </fast-breadcrumb-item>
         <fast-breadcrumb-item href="#">
             Breadcrumb Item 2
-            <svg slot="separator"><use href="#test-icon" /></svg>
+            <span slot="separator">/</span>
         </fast-breadcrumb-item>
         <fast-breadcrumb-item href="#">
             Breadcrumb Item 3
-            <svg slot="separator"><use href="#test-icon" /></svg>
+            <span slot="separator">/</span>
         </fast-breadcrumb-item>
     `,
 };

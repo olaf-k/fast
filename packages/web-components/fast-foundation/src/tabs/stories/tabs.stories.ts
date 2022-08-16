@@ -50,6 +50,28 @@ Tabs.args = {
     },
 };
 
+export const TabsWithIcons: Story<FASTTabs> = Tabs.bind({});
+TabsWithIcons.args = {
+    storyItems: {
+        tabs: [
+            { storyContent: "Tab one" },
+            { storyContent: "Tab two" },
+            { storyContent: "Tab three" },
+        ],
+        tabPanels: [
+            { storyContent: "Tab panel one" },
+            { storyContent: "Tab panel two" },
+            { storyContent: "Tab panel three" },
+        ],
+    },
+    storyContent: html`
+        <svg width="20" height="20" slot="start"><use href="#test-icon" /></svg>
+        ${repeat(x => x.storyItems.tabs, tabStoryTemplate)}
+        ${repeat(x => x.storyItems.tabPanels, tabPanelStoryTemplate)}
+        <svg width="20" height="20" slot="end"><use href="#test-icon-2" /></svg>
+    `,
+};
+
 export const DisabledTabs: Story<FASTTabs> = Tabs.bind({});
 DisabledTabs.args = {
     storyItems: {

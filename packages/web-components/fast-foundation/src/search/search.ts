@@ -2,20 +2,21 @@ import {
     attr,
     nullableNumberConverter,
     observable,
+    SyntheticViewTemplate,
     Updates,
 } from "@microsoft/fast-element";
-import {
-    ARIAGlobalStatesAndProperties,
-    StartEnd,
-    StartEndOptions,
-} from "../patterns/index.js";
+import { ARIAGlobalStatesAndProperties, StartEnd } from "../patterns/index.js";
+import type { StartEndOptions } from "../patterns/start-end.js";
 import { applyMixins } from "../utilities/apply-mixins.js";
 import { FormAssociatedSearch } from "./search.form-associated.js";
+
 /**
  * Search configuration options
  * @public
  */
-export type SearchOptions = StartEndOptions;
+export type SearchOptions = StartEndOptions & {
+    clearIcon?: string | SyntheticViewTemplate;
+};
 
 /**
  * A Search Custom HTML Element.
@@ -25,10 +26,10 @@ export type SearchOptions = StartEndOptions;
  * @slot end - Content which can be provided after the search clear button
  * @slot - The default slot for the label
  * @slot clear-button - The clear button
- * @slot clear-glyph - The clear glyph
+ * @slot clear-icon - The clear icon
  * @csspart label - The label
- * @csspart root - The element wrapping the control, including start and end slots
- * @csspart control - The element representing the input
+ * @csspart control - The logical control, the element wrapping the input field, including start and end slots
+ * @csspart field - The element representing the input field
  * @csspart clear-button - The button to clear the input
  *
  * @public
@@ -174,16 +175,10 @@ export class FASTSearch extends FormAssociatedSearch {
     public defaultSlottedNodes: Node[];
 
     /**
-     * A reference to the internal close button element
+     * A reference to the internal field element
      * @internal
      */
-    public root: HTMLDivElement;
-
-    /**
-     * A reference to the internal input element
-     * @internal
-     */
-    public control: HTMLInputElement;
+    public field: HTMLInputElement;
 
     /**
      * @internal
@@ -202,24 +197,24 @@ export class FASTSearch extends FormAssociatedSearch {
 
     /** {@inheritDoc (FormAssociated:interface).validate} */
     public validate(): void {
-        super.validate(this.control);
+        super.validate(this.field);
     }
 
     /**
-     * Handles the internal control's `input` event
+     * Handles the internal input field's `input` event
      * @internal
      */
     public handleTextInput(): void {
-        this.value = this.control.value;
+        this.value = this.field.value;
     }
 
     /**
-     * Handles the control's clear value event
+     * Clears the value
      * @public
      */
     public handleClearInput(): void {
         this.value = "";
-        this.control.focus();
+        this.field.focus();
         this.handleChange();
     }
 

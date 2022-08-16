@@ -22,7 +22,7 @@ export function comboboxTemplate<T extends FASTCombobox>(
         >
             <div class="control" part="control">
                 ${startSlotTemplate(options)}
-                <slot name="control">
+                <slot name="field">
                     <input
                         aria-activedescendant="${x =>
                             x.open ? x.ariaActiveDescendant : null}"
@@ -31,8 +31,8 @@ export function comboboxTemplate<T extends FASTCombobox>(
                         aria-disabled="${x => x.ariaDisabled}"
                         aria-expanded="${x => x.ariaExpanded}"
                         aria-haspopup="listbox"
-                        class="selected-value"
-                        part="selected-value"
+                        class="field"
+                        part="field"
                         placeholder="${x => x.placeholder}"
                         role="combobox"
                         type="text"
@@ -40,15 +40,15 @@ export function comboboxTemplate<T extends FASTCombobox>(
                         :value="${x => x.value}"
                         @input="${(x, c) => x.inputHandler(c.event as InputEvent)}"
                         @keyup="${(x, c) => x.keyupHandler(c.event as KeyboardEvent)}"
-                        ${ref("control")}
+                        ${ref("field")}
                     />
-                    <div class="indicator" part="indicator" aria-hidden="true">
-                        <slot name="indicator">
-                            ${options.indicator ?? ""}
-                        </slot>
-                    </div>
                 </slot>
                 ${endSlotTemplate(options)}
+                <div class="open-close-icon" part="open-close-icon" aria-hidden="true">
+                    <slot name="open-close-icon">
+                        ${options.openCloseIcon ?? ""}
+                    </slot>
+                </div>
             </div>
             <div
                 class="listbox"

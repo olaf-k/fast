@@ -94,7 +94,7 @@ export const BreadcrumbItemWithSlottedStart: Story<FASTBreadcrumbItem> = Breadcr
 BreadcrumbItemWithSlottedStart.args = {
     storyContent: html`
         Breadcrumb Item with slotted start icon
-        <svg slot="start"><use href="#test-icon"></svg>
+        <svg width="20" height="20" slot="start"><use href="#test-icon" /></svg>
     `,
 };
 
@@ -104,16 +104,6 @@ export const BreadcrumbItemWithSlottedEnd: Story<FASTBreadcrumbItem> = Breadcrum
 BreadcrumbItemWithSlottedEnd.args = {
     storyContent: html`
         Breadcrumb item with slotted end icon
-        <svg slot="end"><use href="#test-icon"></svg>
-    `,
-};
-
-export const BreadcrumbItemWithSlottedSeparator: Story<FASTBreadcrumbItem> = BreadcrumbItem.bind(
-    {}
-);
-BreadcrumbItemWithSlottedSeparator.args = {
-    storyContent: html`
-        Breadcrumb item with slotted separator icon
-        <svg slot="separator"><use href="#test-icon"></svg>
+        <svg width="20" height="20" slot="end"><use href="#test-icon-2" /></svg>
     `,
 };

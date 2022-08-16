@@ -5,7 +5,8 @@ import {
     SyntheticViewTemplate,
 } from "@microsoft/fast-element";
 import { isHTMLElement } from "@microsoft/fast-web-utilities";
-import { StartEnd, StartEndOptions } from "../patterns/start-end.js";
+import { StartEnd } from "../patterns/start-end.js";
+import type { StartEndOptions } from "../patterns/start-end.js";
 import { applyMixins } from "../utilities/apply-mixins.js";
 
 /**
@@ -23,7 +24,7 @@ export function isTreeItemElement(el: Element): el is HTMLElement {
  * @public
  */
 export type TreeItemOptions = StartEndOptions & {
-    expandCollapseGlyph?: string | SyntheticViewTemplate;
+    expandCollapseIcon?: string | SyntheticViewTemplate;
 };
 
 /**
@@ -33,9 +34,9 @@ export type TreeItemOptions = StartEndOptions & {
  * @slot end - Content which can be provided after the tree item content
  * @slot - The default slot for tree item text content
  * @slot item - The slot for tree items (fast tree items manage this assignment themselves)
- * @slot expand-collapse-button - The expand/collapse button
- * @csspart positioning-region - The element used to position the tree item content with exception of any child nodes
- * @csspart content-region - The element containing the expand/collapse, start, and end slots
+ * @slot expand-collapse-icon - The expand/collapse button icon
+ * @csspart control - The element used to position the tree item content with exception of any child nodes
+ * @csspart content - The element containing the expand/collapse, start, and end slots
  * @csspart items - The element wrapping any child items
  * @csspart expand-collapse-button - The expand/collapse button
  * @fires expanded-change - Fires a custom 'expanded-change' event when the expanded state changes

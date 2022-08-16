@@ -4,13 +4,20 @@ import type { FASTProgress } from "./progress.js";
 import type { ProgressOptions } from "./progress.options.js";
 
 /**
+ * @public
+ */
+export const progressIndicatorTemplate = html`
+    <div class="indicator" part="indicator"></div>
+`;
+
+/**
  * The template for the {@link @microsoft/fast-foundation#FASTProgress} component.
  * @public
  */
 export function progressTemplate<T extends FASTProgress>(
     options: ProgressOptions = {}
 ): ElementViewTemplate<T> {
-    return html`
+    return html<T>`
         <template
             role="progressbar"
             aria-valuenow="${x => x.value}"
@@ -20,24 +27,25 @@ export function progressTemplate<T extends FASTProgress>(
             ${when(
                 x => typeof x.value === "number",
                 html<T>`
-                    <div class="progress" part="progress" slot="determinate">
-                        <div
-                            class="determinate"
-                            part="determinate"
-                            style="width: ${x => x.percentComplete}%"
-                        ></div>
-                    </div>
+                    <span
+                        class="determinate"
+                        part="determinate"
+                        style="--percent-complete: ${x => x.percentComplete}"
+                    >
+                        <slot name="determinate">
+                            ${options.determinateIndicator ?? ""}
+                        </slot>
+                    </span>
                 `
             )}
             ${when(
                 x => typeof x.value !== "number",
                 html<T>`
-                    <div class="progress" part="progress" slot="indeterminate">
+                    <span class="indeterminate" part="indeterminate">
                         <slot name="indeterminate">
-                            ${options.indeterminateIndicator1 ?? ""}
-                            ${options.indeterminateIndicator2 ?? ""}
+                            ${options.indeterminateIndicator ?? ""}
                         </slot>
-                    </div>
+                    </span>
                 `
             )}
         </template>

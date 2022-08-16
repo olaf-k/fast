@@ -1,24 +1,32 @@
 import { ElementViewTemplate, html, ref } from "@microsoft/fast-element";
-import type { FASTDisclosure } from "./disclosure.js";
+import { endSlotTemplate, startSlotTemplate } from "../patterns/index.js";
+import type { DisclosureOptions, FASTDisclosure } from "./disclosure.js";
 
 /**
- * The template for the {@link @microsoft/fast-foundation#FASTDisclosure} component.
+ * The template for the {@link @microsoft/fast-foundation#(FASTDisclosure:class)} component.
  * @public
  */
-export function disclosureTemplate<T extends FASTDisclosure>(): ElementViewTemplate<T> {
+export function disclosureTemplate<T extends FASTDisclosure>(
+    options: DisclosureOptions = {}
+): ElementViewTemplate<T> {
     return html<T>`
-        <details class="disclosure" ${ref("details")}>
+        <details class="details" part="details" ${ref("details")}>
             <summary
-                class="invoker"
+                class="summary"
                 role="button"
-                aria-controls="disclosure-content"
+                part="summary"
+                aria-controls="content"
                 aria-expanded="${x => x.expanded}"
             >
-                <slot name="start"></slot>
-                <slot name="summary">${x => x.summary}</slot>
-                <slot name="end"></slot>
+                ${startSlotTemplate(options)}
+                <span class="summary-content" part="summary-content">
+                    <slot name="summary">${x => x.summary}</slot>
+                </span>
+                ${endSlotTemplate(options)}
             </summary>
-            <div id="disclosure-content"><slot></slot></div>
+            <div id="content" class="content" part="content">
+                <slot></slot>
+            </div>
         </details>
     `;
 }

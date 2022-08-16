@@ -1,5 +1,6 @@
 import { attr, FASTElement } from "@microsoft/fast-element";
-import { StartEnd, StartEndOptions } from "../patterns/index.js";
+import { StartEnd } from "../patterns/start-end.js";
+import type { StartEndOptions } from "../patterns/start-end.js";
 import { applyMixins } from "../utilities/apply-mixins.js";
 
 /**
@@ -11,7 +12,10 @@ export type TabOptionOptions = StartEndOptions;
 /**
  * A Tab Component to be used with {@link @microsoft/fast-foundation#(FASTTabs:class)}
  *
+ * @slot start - Content which can be provided before the search input
+ * @slot end - Content which can be provided after the search clear button
  * @slot - The default slot for the tab content
+ * @csspart content - The container for the default slot content
  *
  * @public
  */

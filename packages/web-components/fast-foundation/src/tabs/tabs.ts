@@ -9,7 +9,8 @@ import {
     limit,
     uniqueId,
 } from "@microsoft/fast-web-utilities";
-import { StartEnd, StartEndOptions } from "../patterns/index.js";
+import { StartEnd } from "../patterns/start-end.js";
+import type { StartEndOptions } from "../patterns/start-end.js";
 import { applyMixins } from "../utilities/apply-mixins.js";
 
 /**
@@ -41,8 +42,9 @@ export type TabsOrientation = typeof TabsOrientation[keyof typeof TabsOrientatio
  * @slot end - Content which can be provided after the tablist element
  * @slot tab - The slot for tabs
  * @slot tabpanel - The slot for tabpanels
- * @csspart tablist - The element wrapping for the tabs
- * @csspart activeIndicator - The visual indicator
+ * @csspart tablist - The element wrapping the tabs
+ * @csspart tabpanel - The element wrapping the tabpanels
+ * @csspart active-indicator - The visual indicator
  * @fires change - Fires a custom 'change' event when a tab is clicked or during keyboard navigation
  *
  * @public
@@ -149,7 +151,7 @@ export class FASTTabs extends FASTElement {
      * @internal
      */
     @observable
-    public activeIndicatorRef: HTMLElement;
+    public activeIndicator: HTMLElement;
 
     /**
      * @internal
@@ -336,18 +338,18 @@ export class FASTTabs extends FASTElement {
             ? "translateX"
             : "translateY";
         const offsetProperty: string = this.isHorizontal() ? "offsetLeft" : "offsetTop";
-        const prev: number = this.activeIndicatorRef[offsetProperty];
-        this.activeIndicatorRef.style[gridProperty] = `${this.activeTabIndex + 1}`;
-        const next: number = this.activeIndicatorRef[offsetProperty];
-        this.activeIndicatorRef.style[gridProperty] = `${this.prevActiveTabIndex + 1}`;
+        const prev: number = this.activeIndicator[offsetProperty];
+        this.activeIndicator.style[gridProperty] = `${this.activeTabIndex + 1}`;
+        const next: number = this.activeIndicator[offsetProperty];
+        this.activeIndicator.style[gridProperty] = `${this.prevActiveTabIndex + 1}`;
         const dif: number = next - prev;
-        this.activeIndicatorRef.style.transform = `${translateProperty}(${dif}px)`;
-        this.activeIndicatorRef.classList.add("activeIndicatorTransition");
-        this.activeIndicatorRef.addEventListener("transitionend", () => {
+        this.activeIndicator.style.transform = `${translateProperty}(${dif}px)`;
+        this.activeIndicator.classList.add("activeIndicatorTransition");
+        this.activeIndicator.addEventListener("transitionend", () => {
             this.ticking = false;
-            this.activeIndicatorRef.style[gridProperty] = `${this.activeTabIndex + 1}`;
-            this.activeIndicatorRef.style.transform = `${translateProperty}(0px)`;
-            this.activeIndicatorRef.classList.remove("activeIndicatorTransition");
+            this.activeIndicator.style[gridProperty] = `${this.activeTabIndex + 1}`;
+            this.activeIndicator.style.transform = `${translateProperty}(0px)`;
+            this.activeIndicator.classList.remove("activeIndicatorTransition");
         });
     }
 

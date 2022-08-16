@@ -12,7 +12,7 @@ export function numberFieldTemplate<T extends FASTNumberField>(
     return html<T>`
         <label
             part="label"
-            for="control"
+            for="field"
             class="${x =>
                 x.defaultSlottedNodes && x.defaultSlottedNodes.length
                     ? "label"
@@ -20,12 +20,12 @@ export function numberFieldTemplate<T extends FASTNumberField>(
         >
             <slot ${slotted("defaultSlottedNodes")}></slot>
         </label>
-        <div class="root" part="root">
+        <div class="control" part="control">
             ${startSlotTemplate(options)}
             <input
-                class="control"
-                part="control"
-                id="control"
+                class="field"
+                part="field"
+                id="field"
                 @input="${x => x.handleTextInput()}"
                 @change="${x => x.handleChange()}"
                 @keydown="${(x, c) => x.handleKeyDown(c.event as KeyboardEvent)}"
@@ -63,15 +63,15 @@ export function numberFieldTemplate<T extends FASTNumberField>(
                 aria-owns="${x => x.ariaOwns}"
                 aria-relevant="${x => x.ariaRelevant}"
                 aria-roledescription="${x => x.ariaRoledescription}"
-                ${ref("control")}
+                ${ref("field")}
             />
             ${when(
                 x => !x.hideStep && !x.readOnly && !x.disabled,
                 html<T>`
-                    <div class="controls" part="controls">
+                    <div class="step-buttons" part="step-buttons">
                         <div class="step-up" part="step-up" @click="${x => x.stepUp()}">
-                            <slot name="step-up-glyph">
-                                ${options.stepUpGlyph ?? ""}
+                            <slot name="step-up-icon">
+                                ${options.stepUpIcon ?? ""}
                             </slot>
                         </div>
                         <div
@@ -79,8 +79,8 @@ export function numberFieldTemplate<T extends FASTNumberField>(
                             part="step-down"
                             @click="${x => x.stepDown()}"
                         >
-                            <slot name="step-down-glyph">
-                                ${options.stepDownGlyph ?? ""}
+                            <slot name="step-down-icon">
+                                ${options.stepDownIcon ?? ""}
                             </slot>
                         </div>
                     </div>

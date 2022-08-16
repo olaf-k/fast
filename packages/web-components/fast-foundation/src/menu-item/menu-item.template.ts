@@ -13,82 +13,79 @@ export function menuItemTemplate<T extends FASTMenuItem>(
     options: MenuItemOptions
 ): ElementViewTemplate<T> {
     const anchoredRegionTag = tagFor(options.anchoredRegion);
+
+    const templateCache = {};
+
+    function setTemplateByRole(role: MenuItemRole, options: MenuItemOptions) {
+        let existing = templateCache[role];
+
+        if (!existing) {
+            const key = role.replace("menuitem", "");
+            const optionsKey = key + "Indicator";
+            templateCache[role] = existing = html<T>`
+                <span part="${key}-indicator" class="${key}-indicator">
+                    <slot name="${key}-indicator">
+                        ${options[optionsKey] ?? ""}
+                    </slot>
+                </span>
+            `;
+        }
+
+        return existing;
+    }
+
     return html<T>`
-    <template
-        aria-haspopup="${x => (x.hasSubmenu ? "menu" : void 0)}"
-        aria-checked="${x => (x.role !== MenuItemRole.menuitem ? x.checked : void 0)}"
-        aria-disabled="${x => x.disabled}"
-        aria-expanded="${x => x.expanded}"
-        @keydown="${(x, c) => x.handleMenuItemKeyDown(c.event as KeyboardEvent)}"
-        @click="${(x, c) => x.handleMenuItemClick(c.event as MouseEvent)}"
-        @mouseover="${(x, c) => x.handleMouseOver(c.event as MouseEvent)}"
-        @mouseout="${(x, c) => x.handleMouseOut(c.event as MouseEvent)}"
-    >
+        <template
+            aria-haspopup="${x => (x.hasSubmenu ? "menu" : void 0)}"
+            aria-checked="${x => (x.role !== MenuItemRole.menuitem ? x.checked : void 0)}"
+            aria-disabled="${x => x.disabled}"
+            aria-expanded="${x => x.expanded}"
+            @keydown="${(x, c) => x.handleMenuItemKeyDown(c.event as KeyboardEvent)}"
+            @click="${(x, c) => x.handleMenuItemClick(c.event as MouseEvent)}"
+            @mouseover="${(x, c) => x.handleMouseOver(c.event as MouseEvent)}"
+            @mouseout="${(x, c) => x.handleMouseOut(c.event as MouseEvent)}"
+        >
             ${when(
-                x => x.role === MenuItemRole.menuitemcheckbox,
-                html<FASTMenuItem>`
-                    <div part="input-container" class="input-container">
-                        <span part="checkbox" class="checkbox">
-                            <slot name="checkbox-indicator">
-                                ${options.checkboxIndicator ?? ""}
-                            </slot>
-                        </span>
-                    </div>
+                x => x.role !== MenuItemRole.menuitem,
+                html<T>`
+                    ${x => setTemplateByRole(x.role, options)}
                 `
             )}
+            ${startSlotTemplate(options)}
+            <span class="content" part="content">
+                <slot></slot>
+            </span>
+            ${endSlotTemplate(options)}
             ${when(
-                x => x.role === MenuItemRole.menuitemradio,
-                html<FASTMenuItem>`
-                    <div part="input-container" class="input-container">
-                        <span part="radio" class="radio">
-                            <slot name="radio-indicator">
-                                ${options.radioIndicator ?? ""}
-                            </slot>
-                        </span>
-                    </div>
-                `
-            )}
-        </div>
-        ${startSlotTemplate(options)}
-        <span class="content" part="content">
-            <slot></slot>
-        </span>
-        ${endSlotTemplate(options)}
-        ${when(
-            x => x.hasSubmenu,
-            html<T>`
-                <div
-                    part="expand-collapse-glyph-container"
-                    class="expand-collapse-glyph-container"
-                >
-                    <span part="expand-collapse" class="expand-collapse">
-                        <slot name="expand-collapse-indicator">
-                            ${options.expandCollapseGlyph ?? ""}
+                x => x.hasSubmenu,
+                html<T>`
+                    <span part="submenu-icon" class="submenu-icon">
+                        <slot name="submenu-icon">
+                            ${options.submenuIcon ?? ""}
                         </slot>
                     </span>
-                </div>
-            `
-        )}
-        ${when(
-            x => x.expanded,
-            html<T>`
-                <${anchoredRegionTag}
-                    :anchorElement="${x => x}"
-                    vertical-positioning-mode="dynamic"
-                    vertical-default-position="bottom"
-                    vertical-inset="true"
-                    horizontal-positioning-mode="dynamic"
-                    horizontal-default-position="end"
-                    class="submenu-region"
-                    dir="${x => x.currentDirection}"
-                    @loaded="${x => x.submenuLoaded()}"
-                    ${ref("submenuRegion")}
-                    part="submenu-region"
-                >
-                    <slot name="submenu"></slot>
-                </${anchoredRegionTag}>
-            `
-        )}
-    </template>
+                    ${when(
+                        x => x.expanded,
+                        html<T>`
+                        <${anchoredRegionTag}
+                            :anchorElement="${x => x}"
+                            vertical-positioning-mode="dynamic"
+                            vertical-default-position="bottom"
+                            vertical-inset="true"
+                            horizontal-positioning-mode="dynamic"
+                            horizontal-default-position="end"
+                            class="submenu"
+                            dir="${x => x.currentDirection}"
+                            @loaded="${x => x.submenuLoaded()}"
+                            ${ref("submenuRegion")}
+                            part="submenu"
+                        >
+                            <slot name="submenu"></slot>
+                        </${anchoredRegionTag}>
+                    `
+                    )}
+                `
+            )}
+        </template>
     `;
 }

@@ -96,6 +96,15 @@ export const NumberField: Story<FASTNumberField> = renderComponent(storyTemplate
     {}
 );
 
+export const NumberFieldWithIcons: Story<FASTNumberField> = NumberField.bind({});
+NumberFieldWithIcons.args = {
+    storyContent: html`
+        <svg width="20" height="20" slot="start"><use href="#test-icon" /></svg>
+        Number Field
+        <svg width="20" height="20" slot="end"><use href="#test-icon-2" /></svg>
+    `,
+};
+
 export const NumberFieldInForm: Story<FASTNumberField> = renderComponent(html`
     <form @submit="${() => false}">
         ${storyTemplate}

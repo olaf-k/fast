@@ -1,6 +1,6 @@
 import type { ElementViewTemplate } from "@microsoft/fast-element";
 import { elements, html, ref, slotted, when } from "@microsoft/fast-element";
-import { endSlotTemplate, startSlotTemplate } from "../patterns/start-end.js";
+import { endSlotTemplate, startSlotTemplate, tagFor } from "../patterns/index.js";
 import type { FASTHorizontalScroll } from "./horizontal-scroll.js";
 import type { HorizontalScrollOptions } from "./horizontal-scroll.options.js";
 
@@ -8,9 +8,10 @@ import type { HorizontalScrollOptions } from "./horizontal-scroll.options.js";
  * @public
  */
 export function horizontalScrollTemplate<T extends FASTHorizontalScroll>(
-    options: HorizontalScrollOptions = {}
+    options: HorizontalScrollOptions
 ): ElementViewTemplate<T> {
-    return html`
+    const flipperTag = tagFor(options.flipper);
+    return html<T>`
         <template @keyup="${(x, c) => x.keyupHandler(c.event as KeyboardEvent)}">
             ${startSlotTemplate(options)}
             <div class="scroll-area" part="scroll-area">
@@ -20,11 +21,7 @@ export function horizontalScrollTemplate<T extends FASTHorizontalScroll>(
                     @scroll="${x => x.scrolled()}"
                     ${ref("scrollContainer")}
                 >
-                    <div
-                        class="content-container"
-                        part="content-container"
-                        ${ref("content")}
-                    >
+                    <div class="content" part="content" ${ref("content")}>
                         <slot
                             ${slotted({
                                 property: "scrollItems",
@@ -37,26 +34,37 @@ export function horizontalScrollTemplate<T extends FASTHorizontalScroll>(
                     x => x.view !== "mobile",
                     html<T>`
                         <div
-                            class="scroll scroll-prev"
-                            part="scroll-prev"
+                            class="scroll scroll-previous"
+                            part="scroll-previous"
                             ${ref("previousFlipperContainer")}
                         >
-                            <div class="scroll-action" part="scroll-action-previous">
-                                <slot name="previous-flipper">
-                                    ${options.previousFlipper ?? ""}
-                                </slot>
-                            </div>
+                            <slot name="previous-flipper">
+                                ${options.previousFlipper ??
+                                html<T>`
+                                    <${flipperTag}
+                                        part="previous-flipper"
+                                        @click="${x => x.scrollToPrevious()}"
+                                        direction="previous"
+                                        aria-hidden="${x => x.flippersHiddenFromAT}"
+                                    ></${flipperTag}>
+                                `}
+                            </slot>
                         </div>
                         <div
                             class="scroll scroll-next"
                             part="scroll-next"
                             ${ref("nextFlipperContainer")}
                         >
-                            <div class="scroll-action" part="scroll-action-next">
-                                <slot name="next-flipper">
-                                    ${options.nextFlipper ?? ""}
-                                </slot>
-                            </div>
+                            <slot name="next-flipper">
+                                ${options.nextFlipper ??
+                                html<T>`
+                                    <${flipperTag}
+                                        part="next-flipper"
+                                        @click="${x => x.scrollToNext()}"
+                                        aria-hidden="${x => x.flippersHiddenFromAT}"
+                                    ></${flipperTag}>
+                                `}
+                            </slot>
                         </div>
                     `
                 )}
