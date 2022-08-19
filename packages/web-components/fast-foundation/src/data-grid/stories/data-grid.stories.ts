@@ -5,6 +5,18 @@ import type { FASTDataGrid } from "../data-grid.js";
 type DataGridArgs = Args & FASTDataGrid;
 type DataGridMeta = Meta<DataGridArgs>;
 
+const storyTemplate = html<DataGridArgs>`
+    <fast-data-grid
+        style="${x => x.style}"
+        :rowsData="${x => x.rowsData}"
+        no-tabbing="${x => x.noTabbing}"
+        generate-header="${x => x.generateHeader}"
+        grid-template-columns="${x => x.gridTemplateColumns}"
+    >
+        ${x => x.content}
+    </fast-data-grid>
+`;
+
 function newDataRow(id: string): object {
     return {
         rowId: `rowid-${id}`,
@@ -21,21 +33,16 @@ function newDataSet(rowCount: number): any[] {
     return Array.from({ length: rowCount }, (v, i) => newDataRow(`${i + 1}`));
 }
 
-const storyTemplate = html<DataGridArgs>`
-    <fast-data-grid
-        :rowsData="${x => x.rowsData}"
-        no-tabbing="${x => x.noTabbing}"
-        generate-header="${x => x.generateHeader}"
-        grid-template-columns="${x => x.gridTemplateColumns}"
-    ></fast-data-grid>
-`;
-
 export default {
     title: "Data Grid",
     args: {
-        rowsData: newDataSet(20),
+        rowsData: newDataSet(100),
     },
     argTypes: {
+        style: {
+            control: { type: "text" },
+        },
+        content: { table: { disable: true } },
         noTabbing: {
             control: { type: "boolean" },
         },
@@ -53,4 +60,9 @@ export const DataGrid = (args: DataGridArgs) => {
     const storyFragment = new DocumentFragment();
     storyTemplate.render(args, storyFragment);
     return storyFragment.firstElementChild;
+};
+
+export const DataGridFixedHeight = DataGrid.bind({});
+DataGridFixedHeight.args = {
+    style: "height: 200px; overflow-y: scroll;",
 };
