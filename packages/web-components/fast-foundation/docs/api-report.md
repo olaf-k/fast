@@ -921,6 +921,7 @@ export class FASTDataGrid extends FASTElement {
     noTabbing: boolean;
     // (undocumented)
     protected noTabbingChanged(): void;
+    pageSize: number | undefined;
     // @internal
     rowElements: HTMLElement[];
     rowElementTag: string;
