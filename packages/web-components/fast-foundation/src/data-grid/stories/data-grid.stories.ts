@@ -12,6 +12,7 @@ const storyTemplate = html<DataGridArgs>`
         no-tabbing="${x => x.noTabbing}"
         generate-header="${x => x.generateHeader}"
         grid-template-columns="${x => x.gridTemplateColumns}"
+        page-size="${x => x.pageSize}"
     >
         ${x => x.content}
     </fast-data-grid>
@@ -49,6 +50,9 @@ export default {
         generateHeader: {
             options: ["none", "default", "sticky"],
             control: { type: "select" },
+        },
+        pageSize: {
+            control: { type: "number" },
         },
         gridTemplateColumns: {
             control: { type: "text" },
