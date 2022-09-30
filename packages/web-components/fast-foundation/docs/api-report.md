@@ -19,6 +19,7 @@ import { HostBehavior } from '@microsoft/fast-element';
 import { HostController } from '@microsoft/fast-element';
 import { Orientation } from '@microsoft/fast-web-utilities';
 import { RepeatOptions } from '@microsoft/fast-element';
+import { Splice } from '@microsoft/fast-element';
 import { SyntheticViewTemplate } from '@microsoft/fast-element';
 import { ViewBehaviorOrchestrator } from '@microsoft/fast-element';
 import { ViewTemplate } from '@microsoft/fast-element';
@@ -2288,12 +2289,21 @@ export class FASTTreeView extends FASTElement {
 export class FASTVirtualDataGrid extends VirtualDataGrid {
 }
 
-// Warning: (ae-incompatible-release-tags) The symbol "FASTVirtualList" is marked as @public, but its signature references "VirtualList" which is marked as @beta
-//
 // @public
-export class FASTVirtualList extends VirtualList {
+export class FASTVirtualList extends FASTDataList {
     // @internal (undocumented)
     connectedCallback(): void;
+    // @internal (undocumented)
+    containerElement: HTMLElement;
+    // @internal (undocumented)
+    disconnectedCallback(): void;
+    // (undocumented)
+    protected getRepeatOptions(): RepeatOptions;
+    viewport: string;
+    // Warning: (ae-forgotten-export) The symbol "Virtualizer" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    virtualizer: Virtualizer;
 }
 
 // @public
@@ -2960,12 +2970,6 @@ export function virtualDataGridTemplate<T extends FASTVirtualDataGrid>(options: 
 
 // @beta
 export function Virtualizing<T extends ConstructableVirtualListBase>(BaseCtor: T): T;
-
-// Warning: (ae-forgotten-export) The symbol "VirtualList_base" needs to be exported by the entry point index.d.ts
-//
-// @beta
-export class VirtualList extends VirtualList_base {
-}
 
 // @public
 export type VirtualListAutoUpdateMode = "manual" | "viewport" | "auto" | "self";

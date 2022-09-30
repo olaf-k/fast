@@ -23,13 +23,12 @@ function defaultVerticalItemTemplate(
     return html<any, FASTVirtualList>`
     <${listItemTag}
         :itemData="${x => x}"
-        :itemIndex="${(x, c) => c.index + c.parent.firstRenderedIndex}"
-        :loadMode="${(x, c) => c.parent.itemLoadMode}"
+        :itemIndex="${(x, c) => c.index + c.parent.virtualizer.firstRenderedIndex}"
         :itemContentsTemplate="${(x, c) => c.parent.itemContentsTemplate}"
-        :sizeMap="${(x, c) => c.parent.sizemap}"
+        :sizeMap="${(x, c) => c.parent.virtualizer.sizemap}"
         style="
             transform: ${(x, c) =>
-                `translateY(${c.parent.renderedItemMap[c.index]?.start}px)`};
+                `translateY(${c.parent.virtualizer.renderedItemMap[c.index]?.start}px)`};
         "
     ></${listItemTag}>
 `;
@@ -46,13 +45,12 @@ function defaultHorizontalItemTemplate(
     return html<any, FASTVirtualList>`
     <${listItemTag}
         :itemData="${x => x}"
-        :itemIndex="${(x, c) => c.index + c.parent.firstRenderedIndex}"
-        :loadMode="${(x, c) => c.parent.itemLoadMode}"
+        :itemIndex="${(x, c) => c.index + c.parent.virtualizer.firstRenderedIndex}"
         :itemContentsTemplate="${(x, c) => c.parent.itemContentsTemplate}"
-        :sizeMap="${(x, c) => c.parent.sizemap}"
+        :sizeMap="${(x, c) => c.parent.virtualizer.sizemap}"
         style="
             transform: ${(x, c) =>
-                `translateX(${c.parent.renderedItemMap[c.index]?.start}px)`};
+                `translateX(${c.parent.virtualizer.renderedItemMap[c.index]?.start}px)`};
         "
     ></${listItemTag}>
 `;
@@ -77,11 +75,11 @@ export function virtualListTemplate(
                 width: ${x =>
                     x.orientation === Orientation.vertical
                         ? "100%"
-                        : `${x.totalListSize}px`};
+                        : `${x.virtualizer.totalListSize}px`};
                 height: ${x =>
                     x.orientation !== Orientation.vertical
                         ? "100%"
-                        : `${x.totalListSize}px`};
+                        : `${x.virtualizer.totalListSize}px`};
             "
                 ${ref("containerElement")}
             >
