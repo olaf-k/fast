@@ -5,6 +5,7 @@ import {
     Splice,
     Updates,
 } from "@microsoft/fast-element";
+import { transient } from "@microsoft/fast-element/di";
 import { eventResize, eventScroll, Orientation } from "@microsoft/fast-web-utilities";
 import { IntersectionService } from "../utilities/intersection-service.js";
 import type {
@@ -19,6 +20,7 @@ import type { SizeMap, VirtualListAutoUpdateMode } from "./virtual-list.options.
  *
  * @beta
  */
+@transient
 export class Virtualizer {
     /**
      * Item size to use if one is not specified
