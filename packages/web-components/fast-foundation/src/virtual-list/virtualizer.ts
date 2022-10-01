@@ -1,15 +1,9 @@
 import {
-    attr,
-    bind,
-    Constructable,
-    DOM,
     Notifier,
-    nullableNumberConverter,
-    Observable,
     observable,
-    RepeatDirective,
+    Observable,
     Splice,
-    ViewBehaviorOrchestrator,
+    Updates,
 } from "@microsoft/fast-element";
 import { eventResize, eventScroll, Orientation } from "@microsoft/fast-web-utilities";
 import { IntersectionService } from "../utilities/intersection-service.js";
@@ -17,43 +11,8 @@ import type {
     ResizeObserverClassDefinition,
     ResizeObserverEntry,
 } from "../utilities/resize-observer.js";
-import type { FASTDataList, ItemLoadMode } from "../data-list/index.js";
 import type { FASTVirtualListItem } from "./virtual-list-item.js";
 import type { SizeMap, VirtualListAutoUpdateMode } from "./virtual-list.options.js";
-
-/**
- * Base class for providing Custom Element Virtualizing.
- *
- * @beta
- */
-// export interface VirtualListBase {
-//     virtualizationDisabled: boolean;
-//     viewport: string;
-//     itemSize: number;
-//     viewportBuffer: number;
-//     autoUpdateMode: VirtualListAutoUpdateMode;
-//     sizemap: SizeMap[];
-//     autoResizeItems: boolean;
-//     viewportElement: HTMLElement;
-//     renderedItemMap: SizeMap[];
-//     totalListSize: number;
-//     startSpacerSize: number;
-//     endSpacerSize: number;
-//     firstRenderedIndex: number;
-//     lastRenderedIndex: number;
-//     containerElement: HTMLElement;
-//     displayItems: object[];
-//     itemLoadMode: ItemLoadMode;
-
-//     getItemSizeMap(itemIndex: number): SizeMap | null;
-// }
-
-// /**
-//  * Combined type to describe a Constructable Virtualizing type.
-//  *
-//  * @beta
-//  */
-// export type ConstructableVirtualListBase = Constructable<HTMLElement & FASTDataList>;
 
 /**
  *
@@ -77,6 +36,7 @@ export class Virtualizer {
      *
      * @public
      */
+    @observable
     public orientation: Orientation = Orientation.vertical;
     // protected orientationChanged(): void {
     //     if (this.$fastController.isConnected && this.behaviorOrchestrator) {
@@ -98,32 +58,6 @@ export class Virtualizer {
     //     }
     // }
 
-    // /**
-    //  * Controls the idle load queue behavior.
-    //  *
-    //  * @public
-    //  * @remarks
-    //  * HTML Attribute: item-load-mode
-    //  */
-    // public itemLoadMode: ItemLoadMode = "immediate";
-
-    // /**
-    //  * The HTML ID of the viewport element.
-    //  * If no viewport is set the default viewport is the element itself.
-    //  * Note that viewportElement can be set directly as well.
-    //  *
-    //  * @public
-    //  * @remarks
-    //  * HTML Attribute: anchor
-    //  */
-    // public viewport: string = "";
-    // protected viewportChanged(): void {
-    //     if (this.$fastController.isConnected) {
-    //         this.viewportElement = this.getViewport();
-    //         this.updateDimensions();
-    //     }
-    // }
-
     /**
      * T
      *
@@ -140,8 +74,9 @@ export class Virtualizer {
     /**
      * The items currently displayed
      *
-     * @public
+     * @internal
      */
+    @observable
     public renderedItems: object[] = [];
     // protected renderedItemsChanged(): void {}
 
@@ -154,6 +89,7 @@ export class Virtualizer {
      * @remarks
      * HTML Attribute: item-size
      */
+    @observable
     public itemSize: number = this.defaultItemSize;
     // private itemSizeChanged(): void {
     //     if (this.$fastController.isConnected) {
@@ -201,6 +137,7 @@ export class Virtualizer {
      *
      * @public
      */
+    @observable
     public sizemap: SizeMap[];
     // private sizemapChanged(previous: SizeMap[]): void {
     //     if (this.$fastController.isConnected) {
@@ -228,7 +165,7 @@ export class Virtualizer {
      *
      * @public
      */
-    public viewportElement: HTMLElement;
+    private viewportElement: HTMLElement;
     // private viewportElementChanged(): void {
     //     if (this.$fastController.isConnected) {
     //         this.resetAutoUpdateMode(this.autoUpdateMode, this.autoUpdateMode);
@@ -240,13 +177,14 @@ export class Virtualizer {
      *
      * @internal
      */
-    public containerElement: HTMLElement | null = null;
+    private containerElement: HTMLElement | null = null;
 
     /**
      * True if the list is actively scrolling
      *
      * @internal
      */
+    @observable
     public isBusy: boolean = false;
 
     /**
@@ -254,6 +192,7 @@ export class Virtualizer {
      *
      * @internal
      */
+    @observable
     public renderedItemMap: SizeMap[] = [];
 
     /**
@@ -262,6 +201,7 @@ export class Virtualizer {
      *
      * @internal
      */
+    @observable
     public totalListSize: number = 0;
 
     /**
@@ -341,18 +281,22 @@ export class Virtualizer {
         containerElement: HTMLElement,
         autoUpdateMode: VirtualListAutoUpdateMode
     ) {
+        this.sourceItems = sourceItems;
         this.viewportElement = viewportElement;
         this.containerElement = containerElement;
         this.resetAutoUpdateMode("manual", autoUpdateMode);
-        this.initializeResizeDetector();
+        this.updateDimensions();
 
-        // this.addEventListener("listitemconnected", this.handleListItemConnected);
-        // this.addEventListener(
-        //     "listitemdisconnected",
-        //     this.handleListItemDisconnected
-        // );
+        this.containerElement.addEventListener(
+            "listitemconnected",
+            this.handleListItemConnected
+        );
+        this.containerElement.addEventListener(
+            "listitemdisconnected",
+            this.handleListItemDisconnected
+        );
 
-        this.doReset();
+        this.reset();
     }
 
     /**
@@ -369,40 +313,19 @@ export class Virtualizer {
 
         this.disconnectResizeDetector();
 
-        // this.removeEventListener("listitemconnected", this.handleListItemConnected);
-        // this.removeEventListener(
-        //     "listitemdisconnected",
-        //     this.handleListItemDisconnected
-        // );
+        this.containerElement?.removeEventListener(
+            "listitemconnected",
+            this.handleListItemConnected
+        );
+        this.containerElement?.removeEventListener(
+            "listitemdisconnected",
+            this.handleListItemDisconnected
+        );
         // this.callbackQueue.clear();
         // if (this.currentCallbackElement) {
         //     this.currentCallbackElement = undefined;
         // }
     }
-
-    // /**
-    //  * initialize repeat behavior
-    //  */
-    // protected initializeRepeatBehavior(): void {
-    //     if (this.behaviorOrchestrator === null) {
-    //         if (!this.itemTemplate) {
-    //             this.updateItemTemplate();
-    //         }
-    //         this.createPlaceholderElement();
-    //         this.behaviorOrchestrator = ViewBehaviorOrchestrator.create(this);
-    //         this.$fastController.addBehavior(this.behaviorOrchestrator);
-    //         this.behaviorOrchestrator.addBehaviorFactory(
-    //             new RepeatDirective<typeof this>(
-    //                 bind(x => x.renderedItems, false),
-    //                 bind(x => x.itemTemplate, false),
-    //                 this.getRepeatOptions()
-    //             ),
-    //             this.itemsPlaceholder
-    //         );
-    //     }
-
-    //     super.initializeRepeatBehavior();
-    // }
 
     /**
      * Request a layout update
@@ -567,7 +490,7 @@ export class Virtualizer {
             if (this.pendingPositioningUpdate) {
                 return;
             }
-            DOM.queueUpdate(() => {
+            Updates.enqueue(() => {
                 this.pendingPositioningUpdate = false;
                 this.updateVisibleItems();
             });
@@ -603,7 +526,7 @@ export class Virtualizer {
 
         this.pendingReset = true;
 
-        DOM.queueUpdate(() => {
+        Updates.enqueue(() => {
             this.doReset();
         });
     }
@@ -620,6 +543,7 @@ export class Virtualizer {
         this.observeItems();
         this.observeSizeMap();
         this.updateDimensions();
+        this.initializeResizeDetector();
     }
 
     /**
@@ -660,7 +584,10 @@ export class Virtualizer {
 
             case "self":
                 this.stopViewportResizeDetector();
-                // this.removeEventListener(eventScroll, this.handleScrollEvent);
+                this.containerElement?.removeEventListener(
+                    eventScroll,
+                    this.handleScrollEvent
+                );
                 break;
 
             case "viewport":
@@ -680,10 +607,14 @@ export class Virtualizer {
 
             case "self":
                 this.startViewportResizeDetector();
-                // this.addEventListener(eventScroll, this.handleScrollEvent, {
-                //     passive: true,
-                //     capture: true,
-                // });
+                this.containerElement?.addEventListener(
+                    eventScroll,
+                    this.handleScrollEvent,
+                    {
+                        passive: true,
+                        capture: true,
+                    }
+                );
                 break;
 
             case "viewport":
@@ -704,24 +635,24 @@ export class Virtualizer {
      * initializes the instance's resize observer
      */
     private initializeResizeDetector(): void {
-        // if (this.resizeDetector !== null) {
-        //     return;
-        // }
-        // this.resizeDetector = new ((window as unknown) as WindowWithResizeObserver).ResizeObserver(
-        //     this.resizeDetected.bind(this)
-        // );
-        // this.resizeDetector.observe(this);
+        if (this.resizeDetector !== null) {
+            return;
+        }
+        this.resizeDetector = new ((window as unknown) as WindowWithResizeObserver).ResizeObserver(
+            this.resizeDetected.bind(this)
+        );
+        this.resizeDetector.observe(this.viewportElement);
     }
 
     /**
      * destroys the instance's resize observer
      */
     private disconnectResizeDetector(): void {
-        // if (this.resizeDetector !== null) {
-        //     this.resizeDetector.unobserve(this);
-        //     this.resizeDetector.disconnect();
-        //     this.resizeDetector = null;
-        // }
+        if (this.resizeDetector !== null) {
+            this.resizeDetector.unobserve(this.viewportElement);
+            this.resizeDetector.disconnect();
+            this.resizeDetector = null;
+        }
     }
 
     /**
@@ -729,41 +660,39 @@ export class Virtualizer {
      * the viewport element, or child list items when auto resize is enabled.
      */
     private resizeDetected(entries: ResizeObserverEntry[]): void {
-        // let recalculateNeeded: boolean = false;
-        // entries.forEach((entry: ResizeObserverEntry) => {
-        //     if (entry.target === this.viewportElement || entry.target === this) {
-        //         this.requestPositionUpdates();
-        //     } else {
-        //         if (
-        //             (entry.target as FASTVirtualListItem).$fastController
-        //                 .isConnected &&
-        //             (!this.autoResizeItems ||
-        //                 (entry.target as FASTVirtualListItem).loadContent)
-        //         ) {
-        //             const index: number = (entry.target as FASTVirtualListItem)
-        //                 .itemIndex;
-        //             if (
-        //                 this.pendingSizemapChangeIndex === -1 ||
-        //                 index < this.pendingSizemapChangeIndex
-        //             ) {
-        //                 this.pendingSizemapChangeIndex = index;
-        //             }
-        //             if (this.pendingSizemap === null) {
-        //                 this.pendingSizemap = this.sizemap.slice();
-        //                 recalculateNeeded = true;
-        //             }
-        //             this.pendingSizemap[index].size =
-        //                 this.orientation === Orientation.vertical
-        //                     ? entry.contentRect.height
-        //                     : entry.contentRect.width;
-        //         }
-        //     }
-        //     if (recalculateNeeded) {
-        //         DOM.queueUpdate(() => {
-        //             this.recalculateSizeMap();
-        //         });
-        //     }
-        // });
+        let recalculateNeeded: boolean = false;
+        entries.forEach((entry: ResizeObserverEntry) => {
+            if (entry.target === this.viewportElement) {
+                this.requestPositionUpdates();
+            } else {
+                if (
+                    (entry.target as FASTVirtualListItem).$fastController.isConnected &&
+                    (!this.autoResizeItems ||
+                        (entry.target as FASTVirtualListItem).loadContent)
+                ) {
+                    const index: number = (entry.target as FASTVirtualListItem).itemIndex;
+                    if (
+                        this.pendingSizemapChangeIndex === -1 ||
+                        index < this.pendingSizemapChangeIndex
+                    ) {
+                        this.pendingSizemapChangeIndex = index;
+                    }
+                    if (this.pendingSizemap === null) {
+                        this.pendingSizemap = this.sizemap.slice();
+                        recalculateNeeded = true;
+                    }
+                    this.pendingSizemap[index].size =
+                        this.orientation === Orientation.vertical
+                            ? entry.contentRect.height
+                            : entry.contentRect.width;
+                }
+            }
+            if (recalculateNeeded) {
+                Updates.enqueue(() => {
+                    this.recalculateSizeMap();
+                });
+            }
+        });
     }
 
     /**
@@ -860,8 +789,6 @@ export class Virtualizer {
         } else {
             this.totalListSize = this.itemSize * this.sourceItems.length;
         }
-
-        this.requestPositionUpdates();
     };
 
     /**
@@ -1075,34 +1002,3 @@ export class Virtualizer {
         this.updateVisibleItems();
     };
 }
-
-//     attr({ attribute: "virtualization-disabled", mode: "boolean" })(
-//         C.prototype,
-//         "virtualizationDisabled"
-//     );
-//     attr(C.prototype, "viewport");
-//     attr({ attribute: "item-size", converter: nullableNumberConverter })(
-//         C.prototype,
-//         "itemSize"
-//     );
-//     attr({ attribute: "viewport-buffer", converter: nullableNumberConverter })(
-//         C.prototype,
-//         "viewportBuffer"
-//     );
-//     attr({ attribute: "auto-update-mode" })(C.prototype, "autoUpdateMode");
-//     attr({ attribute: "auto-resize-items" })(C.prototype, "autoResizeItems");
-
-//     observable(C.prototype, "isBusy");
-//     observable(C.prototype, "sizemap");
-//     observable(C.prototype, "displayItems");
-//     observable(C.prototype, "viewportElement");
-//     observable(C.prototype, "renderedItemMap");
-//     observable(C.prototype, "totalListSize");
-//     observable(C.prototype, "startSpacerSize");
-//     observable(C.prototype, "endSpacerSize");
-//     observable(C.prototype, "firstRenderedIndex");
-//     observable(C.prototype, "lastRenderedIndex");
-//     observable(C.prototype, "containerElement");
-
-//     return C;
-// }

@@ -1,4 +1,9 @@
-import { observable, RepeatOptions } from "@microsoft/fast-element";
+import {
+    bind,
+    RepeatDirective,
+    RepeatOptions,
+    ViewBehaviorOrchestrator,
+} from "@microsoft/fast-element";
 import { inject } from "@microsoft/fast-element/di";
 import { FASTDataList } from "../index.js";
 import { Virtualizer } from "./virtualizer.js";
@@ -29,6 +34,18 @@ export class FASTVirtualList extends FASTDataList {
     //}
 
     /**
+     * The HTML element being used as the viewport
+     *
+     * @public
+     */
+    private viewportElement: HTMLElement;
+    //  private viewportElementChanged(): void {
+    //      if (this.$fastController.isConnected) {
+    //          this.resetAutoUpdateMode(this.autoUpdateMode, this.autoUpdateMode);
+    //      }
+    //  }
+
+    /**
      *
      *
      * @internal
@@ -40,7 +57,15 @@ export class FASTVirtualList extends FASTDataList {
      */
     connectedCallback() {
         super.connectedCallback();
-        this.virtualizer.containerElement = this.containerElement;
+        if (!this.viewportElement) {
+            this.viewportElement = this.getViewport();
+        }
+        this.virtualizer.connect(
+            this.sourceItems,
+            this.viewportElement,
+            this.containerElement,
+            "auto"
+        );
     }
 
     /**
@@ -48,7 +73,31 @@ export class FASTVirtualList extends FASTDataList {
      */
     disconnectedCallback() {
         super.disconnectedCallback();
-        this.virtualizer.containerElement = null;
+        this.virtualizer.disconnect();
+    }
+
+    /**
+     * initialize repeat behavior
+     */
+    protected initializeRepeatBehavior(): void {
+        if (this.behaviorOrchestrator === null) {
+            if (!this.itemTemplate) {
+                this.updateItemTemplate();
+            }
+            this.createPlaceholderElement();
+            this.behaviorOrchestrator = ViewBehaviorOrchestrator.create(this);
+            this.$fastController.addBehavior(this.behaviorOrchestrator);
+            this.behaviorOrchestrator.addBehaviorFactory(
+                new RepeatDirective<typeof this>(
+                    bind(x => x.virtualizer.renderedItems, false),
+                    bind(x => x.itemTemplate, false),
+                    this.getRepeatOptions()
+                ),
+                this.itemsPlaceholder
+            );
+        }
+
+        super.initializeRepeatBehavior();
     }
 
     protected getRepeatOptions(): RepeatOptions {
