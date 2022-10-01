@@ -1,5 +1,6 @@
 import {
     bind,
+    observable,
     RepeatDirective,
     RepeatOptions,
     ViewBehaviorOrchestrator,
@@ -15,6 +16,23 @@ import { Virtualizer } from "./virtualizer.js";
  */
 export class FASTVirtualList extends FASTDataList {
     @inject(Virtualizer) virtualizer!: Virtualizer;
+
+    /**
+     * Item size to use if one is not specified
+     */
+    public defaultItemSize = 100;
+
+    /**
+     * The size in pixels of each item along the virtualization axis.
+     * When auto-resizing this is the amount of space reserved for elements until
+     * they actually render and report size.  The default value is 50.
+     *
+     * @public
+     * @remarks
+     * HTML Attribute: item-size
+     */
+    @observable
+    public itemSize: number = this.defaultItemSize;
 
     /**
      * The HTML ID of the viewport element.
@@ -60,6 +78,7 @@ export class FASTVirtualList extends FASTDataList {
         if (!this.viewportElement) {
             this.viewportElement = this.getViewport();
         }
+        this.virtualizer.itemSize = this.itemSize;
         this.virtualizer.connect(
             this.sourceItems,
             this.viewportElement,

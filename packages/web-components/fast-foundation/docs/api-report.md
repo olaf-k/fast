@@ -309,9 +309,6 @@ export { composedParent }
 // @beta
 export type ConstructableFormAssociated = Constructable<HTMLElement & FASTElement>;
 
-// @beta
-export type ConstructableVirtualListBase = Constructable<HTMLElement & FASTDataList>;
-
 // @public (undocumented)
 export class CSSDesignToken<T> extends DesignToken<T> implements CSSDirective {
     constructor(configuration: CSSDesignTokenConfiguration);
@@ -2283,10 +2280,24 @@ export class FASTTreeView extends FASTElement {
     treeView: HTMLElement;
 }
 
-// Warning: (ae-incompatible-release-tags) The symbol "FASTVirtualDataGrid" is marked as @public, but its signature references "VirtualDataGrid" which is marked as @beta
-//
 // @public
-export class FASTVirtualDataGrid extends VirtualDataGrid {
+export class FASTVirtualDataGrid extends FASTDataGrid {
+    // @internal (undocumented)
+    connectedCallback(): void;
+    // @internal (undocumented)
+    containerElement: HTMLElement;
+    defaultRowHeight: number;
+    // @internal (undocumented)
+    disconnectedCallback(): void;
+    // (undocumented)
+    protected getRepeatOptions(): RepeatOptions;
+    protected initializeRepeatBehavior(): void;
+    rowHeight: number;
+    viewport: string;
+    // Warning: (ae-forgotten-export) The symbol "Virtualizer" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    virtualizer: Virtualizer;
 }
 
 // @public
@@ -2295,13 +2306,14 @@ export class FASTVirtualList extends FASTDataList {
     connectedCallback(): void;
     // @internal (undocumented)
     containerElement: HTMLElement;
+    defaultItemSize: number;
     // @internal (undocumented)
     disconnectedCallback(): void;
     // (undocumented)
     protected getRepeatOptions(): RepeatOptions;
+    protected initializeRepeatBehavior(): void;
+    itemSize: number;
     viewport: string;
-    // Warning: (ae-forgotten-export) The symbol "Virtualizer" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     virtualizer: Virtualizer;
 }
@@ -2954,12 +2966,6 @@ export const VerticalPosition: {
 // @public
 export type VerticalPosition = typeof VerticalPosition[keyof typeof VerticalPosition];
 
-// Warning: (ae-forgotten-export) The symbol "VirtualDataGrid_base" needs to be exported by the entry point index.d.ts
-//
-// @beta
-export class VirtualDataGrid extends VirtualDataGrid_base {
-}
-
 // @public
 export type VirtualDataGridOptions = {
     dataGridRow: TemplateElementDependency;
@@ -2968,51 +2974,8 @@ export type VirtualDataGridOptions = {
 // @public
 export function virtualDataGridTemplate<T extends FASTVirtualDataGrid>(options: VirtualDataGridOptions): ElementViewTemplate<T>;
 
-// @beta
-export function Virtualizing<T extends ConstructableVirtualListBase>(BaseCtor: T): T;
-
 // @public
 export type VirtualListAutoUpdateMode = "manual" | "viewport" | "auto" | "self";
-
-// @beta
-export interface VirtualListBase {
-    // (undocumented)
-    autoResizeItems: boolean;
-    // (undocumented)
-    autoUpdateMode: VirtualListAutoUpdateMode;
-    // (undocumented)
-    containerElement: HTMLElement;
-    // (undocumented)
-    displayItems: object[];
-    // (undocumented)
-    endSpacerSize: number;
-    // (undocumented)
-    firstRenderedIndex: number;
-    // (undocumented)
-    getItemSizeMap(itemIndex: number): SizeMap | null;
-    // (undocumented)
-    itemLoadMode: ItemLoadMode;
-    // (undocumented)
-    itemSize: number;
-    // (undocumented)
-    lastRenderedIndex: number;
-    // (undocumented)
-    renderedItemMap: SizeMap[];
-    // (undocumented)
-    sizemap: SizeMap[];
-    // (undocumented)
-    startSpacerSize: number;
-    // (undocumented)
-    totalListSize: number;
-    // (undocumented)
-    viewport: string;
-    // (undocumented)
-    viewportBuffer: number;
-    // (undocumented)
-    viewportElement: HTMLElement;
-    // (undocumented)
-    virtualizationDisabled: boolean;
-}
 
 // @public
 export function virtualListItemTemplate(): ElementViewTemplate<FASTVirtualListItem>;

@@ -1,5 +1,6 @@
 import {
     bind,
+    observable,
     RepeatDirective,
     RepeatOptions,
     ViewBehaviorOrchestrator,
@@ -15,6 +16,23 @@ import { Virtualizer } from "../virtual-list/virtualizer.js";
  */
 export class FASTVirtualDataGrid extends FASTDataGrid {
     @inject(Virtualizer) virtualizer!: Virtualizer;
+
+    /**
+     * row height to use if one is not specified
+     */
+    public defaultRowHeight = 30;
+
+    /**
+     * The size in pixels of each item along the virtualization axis.
+     * When auto-resizing this is the amount of space reserved for elements until
+     * they actually render and report size.  The default value is 50.
+     *
+     * @public
+     * @remarks
+     * HTML Attribute: item-size
+     */
+    @observable
+    public rowHeight: number = this.defaultRowHeight;
 
     /**
      * The HTML ID of the viewport element.
@@ -60,6 +78,7 @@ export class FASTVirtualDataGrid extends FASTDataGrid {
         if (!this.viewportElement) {
             this.viewportElement = this.getViewport();
         }
+        this.virtualizer.itemSize = this.rowHeight;
         this.virtualizer.connect(
             this.sourceItems,
             this.viewportElement,

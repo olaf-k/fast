@@ -1,8 +1,11 @@
+import { transient } from "@microsoft/fast-element/di";
+
 /**
  * An idle loading queue
  *
  * @public
  */
+@transient
 export class idleLoadQueue {
     /**
      * Defines the idle callback timeout value.
