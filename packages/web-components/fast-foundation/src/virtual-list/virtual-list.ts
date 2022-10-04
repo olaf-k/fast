@@ -101,6 +101,7 @@ export class FASTVirtualList extends FASTDataList {
     disconnectedCallback() {
         super.disconnectedCallback();
         this.virtualizer.disconnect();
+        this.idleLoadQueue.clearCallbackQueue();
     }
 
     /**
@@ -131,6 +132,7 @@ export class FASTVirtualList extends FASTDataList {
         //positioning is always true for virtual lists
         const options = super.getRepeatOptions();
         options.positioning = true;
+        options.recycle = false;
         return options;
     }
 

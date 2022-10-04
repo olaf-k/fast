@@ -18,12 +18,16 @@ export class DefaultIdleLoadQueue implements IdleLoadQueue {
      * @remarks
      */
     public idleCallbackTimeout: number = 1000;
-    public idleCallbackInterval: number = 20;
+    public idleCallbackInterval: number = 900;
     public callbackQueue: Map<Element, () => void> = new Map<Element, () => void>();
 
     public currentCallbackId: number | undefined;
     public currentCallbackElement: Element | undefined;
     public currentCallback: (() => void) | undefined;
+
+    constructor() {
+        console.log("cons");
+    }
 
     /**
      * Suspends idle loading
@@ -32,12 +36,6 @@ export class DefaultIdleLoadQueue implements IdleLoadQueue {
      * @public
      */
     public idleLoadingSuspended: boolean = false;
-
-    connect(target: EventTarget) {}
-
-    disconnect() {
-        this.clearCallbackQueue();
-    }
 
     /**
      * Request an idle callback

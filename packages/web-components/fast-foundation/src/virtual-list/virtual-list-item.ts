@@ -1,4 +1,5 @@
 import { FASTElement, HTMLView, observable, ViewTemplate } from "@microsoft/fast-element";
+import { convertStylePropertyPixelsToNumber } from "@microsoft/fast-web-utilities";
 import { IdleLoadQueue } from "../idle-load/idle-load-queue.js";
 import type { SizeMap } from "./virtual-list.options.js";
 
@@ -92,7 +93,6 @@ export class FASTVirtualListItem extends FASTElement {
      */
     connectedCallback() {
         super.connectedCallback();
-
         if (this.itemContentsTemplate) {
             this.customView = this.itemContentsTemplate.render(this, this);
         }
@@ -116,6 +116,7 @@ export class FASTVirtualListItem extends FASTElement {
         if (this.idleLoad && !this.loadContent) {
             this.idleLoadQueue.cancelIdleCallback(this);
         }
+        this.loadContent = false;
     }
 
     /**

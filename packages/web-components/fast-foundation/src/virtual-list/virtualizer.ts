@@ -122,6 +122,7 @@ export class Virtualizer {
      * @remarks
      * HTML Attribute: auto-update-mode
      */
+    @observable
     public autoUpdateMode: VirtualListAutoUpdateMode = "viewport";
     // private autoUpdateModeChanged(
     //     prevMode: VirtualListAutoUpdateMode,
@@ -156,6 +157,7 @@ export class Virtualizer {
      * @remarks
      * HTML Attribute: auto-resize-items
      */
+    @observable
     public autoResizeItems: boolean;
     //  private autoResizeItemsChanged(prev: boolean): void {
     //      if (this.$fastController.isConnected) {
@@ -167,6 +169,7 @@ export class Virtualizer {
      *
      * @public
      */
+    @observable
     private viewportElement: HTMLElement;
     // private viewportElementChanged(): void {
     //     if (this.$fastController.isConnected) {
@@ -323,10 +326,6 @@ export class Virtualizer {
             "listitemdisconnected",
             this.handleListItemDisconnected
         );
-        // this.callbackQueue.clear();
-        // if (this.currentCallbackElement) {
-        //     this.currentCallbackElement = undefined;
-        // }
     }
 
     /**
@@ -891,7 +890,7 @@ export class Virtualizer {
         );
 
         this.updateVisibleItemSizes(newFirstRenderedIndex, newLastRenderedIndex);
-        // this.displayItems.splice(0, this.displayItems.length, ...newVisibleItems);
+        // this.renderedItems.splice(0, this.renderedItems.length, ...newVisibleItems);
         this.renderedItems = newVisibleItems;
     }
 

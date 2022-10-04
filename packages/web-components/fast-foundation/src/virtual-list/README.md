@@ -41,11 +41,12 @@ export class FASTVirtualList extends VirtualList{}
 | ------------- | ------ | ----------------------- |
 | `FASTElement` |        | @microsoft/fast-element |
 
-#### Mixins
+#### Fields
 
-| Name                  | Module                            | Package |
-| --------------------- | --------------------------------- | ------- |
-| `IdleLoadClientMixin` | /src/idle-load/idle-load-queue.js |         |
+| Name                 | Privacy | Type            | Default | Description          | Inherited From |
+| -------------------- | ------- | --------------- | ------- | -------------------- | -------------- |
+| `idleLoadQueue`      |         | `IdleLoadQueue` |         |                      |                |
+| `handleIdleCallback` | public  |                 |         | Handle idle callback |                |
 
 <hr/>
 
@@ -59,18 +60,13 @@ export class FASTVirtualList extends VirtualList{}
 | -------------- | ----------------------- | ------- |
 | `FASTDataList` | /src/data-list/index.js |         |
 
-#### Mixins
-
-| Name                 | Module                            | Package |
-| -------------------- | --------------------------------- | ------- |
-| `IdleLoadQueueMixin` | /src/idle-load/idle-load-queue.js |         |
-
 #### Fields
 
 | Name                   | Privacy   | Type                               | Default | Description                                                                                                                                                                                               | Inherited From |
 | ---------------------- | --------- | ---------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
 | `container`            |           | `Container`                        |         |                                                                                                                                                                                                           |                |
 | `virtualizer`          |           | `Virtualizer`                      |         |                                                                                                                                                                                                           |                |
+| `idleLoadQueue`        |           | `DefaultIdleLoadQueue`             |         |                                                                                                                                                                                                           |                |
 | `defaultItemSize`      | public    | `number`                           | `100`   | Item size to use if one is not specified                                                                                                                                                                  |                |
 | `itemSize`             | public    | `number`                           |         | The size in pixels of each item along the virtualization axis. When auto-resizing this is the amount of space reserved for elements until they actually render and report size.  The default value is 50. |                |
 | `viewport`             | public    | `string`                           | `""`    | The HTML ID of the viewport element. If no viewport is set the default viewport is the element itself. Note that viewportElement can be set directly as well.                                             |                |
