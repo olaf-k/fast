@@ -8,8 +8,10 @@ import type { CaptureType } from '@microsoft/fast-element';
 import { composedContains } from '@microsoft/fast-element/utilities';
 import { composedParent } from '@microsoft/fast-element/utilities';
 import { Constructable } from '@microsoft/fast-element';
+import { Container } from '@microsoft/fast-element/di';
 import type { CSSDirective } from '@microsoft/fast-element';
 import { Direction } from '@microsoft/fast-web-utilities';
+import { ElementController } from '@microsoft/fast-element';
 import type { ElementsFilter } from '@microsoft/fast-element';
 import { ElementStyles } from '@microsoft/fast-element';
 import { ElementViewTemplate } from '@microsoft/fast-element';
@@ -18,6 +20,7 @@ import { FASTElementDefinition } from '@microsoft/fast-element';
 import { HostBehavior } from '@microsoft/fast-element';
 import { HostController } from '@microsoft/fast-element';
 import { Orientation } from '@microsoft/fast-web-utilities';
+import { PartialFASTElementDefinition } from '@microsoft/fast-element';
 import { RepeatOptions } from '@microsoft/fast-element';
 import { Splice } from '@microsoft/fast-element';
 import { SyntheticViewTemplate } from '@microsoft/fast-element';
@@ -2300,10 +2303,14 @@ export class FASTVirtualDataGrid extends FASTDataGrid {
     virtualizer: Virtualizer;
 }
 
+// Warning: (ae-forgotten-export) The symbol "FASTVirtualList_base" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class FASTVirtualList extends FASTDataList {
+export class FASTVirtualList extends FASTVirtualList_base {
     // @internal (undocumented)
     connectedCallback(): void;
+    // (undocumented)
+    container: Container;
     // @internal (undocumented)
     containerElement: HTMLElement;
     defaultItemSize: number;
@@ -2318,15 +2325,14 @@ export class FASTVirtualList extends FASTDataList {
     virtualizer: Virtualizer;
 }
 
+// Warning: (ae-forgotten-export) The symbol "FASTVirtualListItem_base" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class FASTVirtualListItem extends FASTElement {
+export class FASTVirtualListItem extends FASTVirtualListItem_base {
     // @internal (undocumented)
     connectedCallback(): void;
     // @internal (undocumented)
     disconnectedCallback(): void;
-    handleIdleCallback: () => void;
-    // @internal
-    idleLoad: boolean;
     // @internal
     itemContentsTemplate: ViewTemplate;
     // @internal
@@ -2337,8 +2343,6 @@ export class FASTVirtualListItem extends FASTElement {
     itemSizeMap: SizeMap;
     // @internal
     listItemContentsTemplate: ViewTemplate;
-    // @internal
-    loadContent: boolean;
     // @internal
     sizeMap: SizeMap[];
 }

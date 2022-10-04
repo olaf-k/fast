@@ -41,11 +41,11 @@ export class FASTVirtualList extends VirtualList{}
 | ------------- | ------ | ----------------------- |
 | `FASTElement` |        | @microsoft/fast-element |
 
-#### Fields
+#### Mixins
 
-| Name                 | Privacy | Type | Default | Description          | Inherited From |
-| -------------------- | ------- | ---- | ------- | -------------------- | -------------- |
-| `handleIdleCallback` | public  |      |         | Handle idle callback |                |
+| Name                  | Module                            | Package |
+| --------------------- | --------------------------------- | ------- |
+| `IdleLoadClientMixin` | /src/idle-load/idle-load-queue.js |         |
 
 <hr/>
 
@@ -55,14 +55,21 @@ export class FASTVirtualList extends VirtualList{}
 
 #### Superclass
 
-| Name           | Module        | Package |
-| -------------- | ------------- | ------- |
-| `FASTDataList` | /src/index.js |         |
+| Name           | Module                  | Package |
+| -------------- | ----------------------- | ------- |
+| `FASTDataList` | /src/data-list/index.js |         |
+
+#### Mixins
+
+| Name                 | Module                            | Package |
+| -------------------- | --------------------------------- | ------- |
+| `IdleLoadQueueMixin` | /src/idle-load/idle-load-queue.js |         |
 
 #### Fields
 
 | Name                   | Privacy   | Type                               | Default | Description                                                                                                                                                                                               | Inherited From |
 | ---------------------- | --------- | ---------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| `container`            |           | `Container`                        |         |                                                                                                                                                                                                           |                |
 | `virtualizer`          |           | `Virtualizer`                      |         |                                                                                                                                                                                                           |                |
 | `defaultItemSize`      | public    | `number`                           | `100`   | Item size to use if one is not specified                                                                                                                                                                  |                |
 | `itemSize`             | public    | `number`                           |         | The size in pixels of each item along the virtualization axis. When auto-resizing this is the amount of space reserved for elements until they actually render and report size.  The default value is 50. |                |
@@ -93,6 +100,7 @@ export class FASTVirtualList extends VirtualList{}
 
 | Name          | Field       | Inherited From |
 | ------------- | ----------- | -------------- |
+| `item-size`   | itemSize    |                |
 | `recycle`     | recycle     | FASTDataList   |
 | `positioning` | positioning | FASTDataList   |
 

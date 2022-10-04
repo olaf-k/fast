@@ -1,4 +1,5 @@
 import { FASTElement, HTMLView, observable, ViewTemplate } from "@microsoft/fast-element";
+import { IdleLoadQueue } from "../idle-load/idle-load-queue.js";
 import type { SizeMap } from "./virtual-list.options.js";
 
 /**
@@ -7,6 +8,16 @@ import type { SizeMap } from "./virtual-list.options.js";
  * @public
  */
 export class FASTVirtualListItem extends FASTElement {
+    @IdleLoadQueue idleLoadQueue!: IdleLoadQueue;
+
+    /**
+     * Whether idle loading is enabled
+     *
+     * @internal
+     */
+    @observable
+    public idleLoad: boolean = true;
+
     /**
      * The viewtemplate used to render the item contents
      *
@@ -33,14 +44,6 @@ export class FASTVirtualListItem extends FASTElement {
      */
     @observable
     public itemSizeMap: SizeMap;
-
-    /**
-     * Whether idle loading is enabled
-     *
-     * @internal
-     */
-    @observable
-    public idleLoad: boolean;
 
     /**
      * The data associated with this item
@@ -89,15 +92,16 @@ export class FASTVirtualListItem extends FASTElement {
      */
     connectedCallback() {
         super.connectedCallback();
-        if (!this.idleLoad) {
-            this.loadContent = true;
-        }
 
         if (this.itemContentsTemplate) {
             this.customView = this.itemContentsTemplate.render(this, this);
         }
 
-        this.$emit("listitemconnected");
+        if (this.idleLoad) {
+            this.idleLoadQueue.requestIdleCallback(this, this.handleIdleCallback);
+        } else {
+            this.loadContent = true;
+        }
     }
 
     /**
@@ -105,12 +109,13 @@ export class FASTVirtualListItem extends FASTElement {
      */
     disconnectedCallback(): void {
         super.disconnectedCallback();
-        this.loadContent = false;
         if (this.customView) {
             this.customView.dispose();
             this.customView = null;
         }
-        this.$emit("listitemdisconnected");
+        if (this.idleLoad && !this.loadContent) {
+            this.idleLoadQueue.cancelIdleCallback(this);
+        }
     }
 
     /**

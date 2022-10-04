@@ -1,12 +1,15 @@
-import { transient } from "@microsoft/fast-element/di";
+import { DI, transient } from "@microsoft/fast-element/di";
 
-/**
- * An idle loading queue
- *
- * @public
- */
+export interface IdleLoadQueue {
+    requestIdleCallback(target: Element, callback: () => void): void;
+    cancelIdleCallback(target: Element): void;
+    clearCallbackQueue(): void;
+}
+
+export const IdleLoadQueue = DI.createContext<string>("idleLoadQueue");
+
 @transient
-export class idleLoadQueue {
+export class DefaultIdleLoadQueue implements IdleLoadQueue {
     /**
      * Defines the idle callback timeout value.
      * Defaults to 1000
@@ -15,12 +18,12 @@ export class idleLoadQueue {
      * @remarks
      */
     public idleCallbackTimeout: number = 1000;
-    private idleCallbackInterval: number = 20;
-    private callbackQueue: Map<Element, () => void> = new Map<Element, () => void>();
+    public idleCallbackInterval: number = 20;
+    public callbackQueue: Map<Element, () => void> = new Map<Element, () => void>();
 
-    private currentCallbackId: number | undefined;
-    private currentCallbackElement: Element | undefined;
-    private currentCallback: (() => void) | undefined;
+    public currentCallbackId: number | undefined;
+    public currentCallbackElement: Element | undefined;
+    public currentCallback: (() => void) | undefined;
 
     /**
      * Suspends idle loading
@@ -29,6 +32,12 @@ export class idleLoadQueue {
      * @public
      */
     public idleLoadingSuspended: boolean = false;
+
+    connect(target: EventTarget) {}
+
+    disconnect() {
+        this.clearCallbackQueue();
+    }
 
     /**
      * Request an idle callback

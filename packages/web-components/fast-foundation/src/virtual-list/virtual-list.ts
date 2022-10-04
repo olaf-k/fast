@@ -1,12 +1,14 @@
 import {
+    attr,
     bind,
-    observable,
+    nullableNumberConverter,
     RepeatDirective,
     RepeatOptions,
     ViewBehaviorOrchestrator,
 } from "@microsoft/fast-element";
-import { inject } from "@microsoft/fast-element/di";
-import { FASTDataList } from "../index.js";
+import { Container, DI, inject, Registration } from "@microsoft/fast-element/di";
+import { FASTDataList } from "../data-list/index.js";
+import { DefaultIdleLoadQueue, IdleLoadQueue } from "../idle-load/idle-load-queue.js";
 import { Virtualizer } from "./virtualizer.js";
 
 /**
@@ -15,7 +17,9 @@ import { Virtualizer } from "./virtualizer.js";
  * @public
  */
 export class FASTVirtualList extends FASTDataList {
+    @Container container!: Container;
     @inject(Virtualizer) virtualizer!: Virtualizer;
+    @inject(DefaultIdleLoadQueue) idleLoadQueue!: DefaultIdleLoadQueue;
 
     /**
      * Item size to use if one is not specified
@@ -31,7 +35,7 @@ export class FASTVirtualList extends FASTDataList {
      * @remarks
      * HTML Attribute: item-size
      */
-    @observable
+    @attr({ attribute: "item-size", converter: nullableNumberConverter })
     public itemSize: number = this.defaultItemSize;
 
     /**
@@ -78,6 +82,10 @@ export class FASTVirtualList extends FASTDataList {
         if (!this.viewportElement) {
             this.viewportElement = this.getViewport();
         }
+        DI.getOrCreateDOMContainer(this).register(
+            Registration.instance(IdleLoadQueue, this.idleLoadQueue)
+        );
+
         this.virtualizer.itemSize = this.itemSize;
         this.virtualizer.connect(
             this.sourceItems,

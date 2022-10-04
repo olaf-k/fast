@@ -82,7 +82,7 @@ const storyTemplate = html<VirtualListStoryArgs>`
 export default {
     title: "Virtual List",
     args: {
-        itemSize: 100,
+        itemSize: 207,
         itemLoadMode: "idle",
     },
     argTypes: {
@@ -93,10 +93,10 @@ export default {
             control: { type: "text" },
         },
         itemSize: {
-            control: { type: "text" },
+            control: { type: "number" },
         },
         viewportBuffer: {
-            control: { type: "text" },
+            control: { type: "number" },
         },
         orientation: {
             options: ["horizontal", "vertical"],

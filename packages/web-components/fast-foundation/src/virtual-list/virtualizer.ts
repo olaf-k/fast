@@ -372,10 +372,6 @@ export class Virtualizer {
         if (this.autoResizeItems) {
             this.resizeDetector?.observe(e.target as Element);
         }
-        // this.requestIdleCallback(
-        //     e.target as FASTVirtualListItem,
-        //     (e.target as FASTVirtualListItem).handleIdleCallback
-        // );
     }
 
     /**
@@ -388,7 +384,6 @@ export class Virtualizer {
         if (this.autoResizeItems) {
             this.resizeDetector?.unobserve(e.target as Element);
         }
-        // this.cancelIdleCallback(e.target as Element);
     }
 
     /**
@@ -504,9 +499,7 @@ export class Virtualizer {
         }
         this.finalUpdateNeeded = false;
         this.pendingPositioningUpdate = true;
-        //if (this.itemLoadMode === "idle") {
         this.isBusy = true;
-        //}
 
         this.intersectionService.requestPosition(
             this.containerElement,
