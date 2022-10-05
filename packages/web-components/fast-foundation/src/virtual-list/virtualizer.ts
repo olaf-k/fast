@@ -884,13 +884,21 @@ export class Virtualizer {
                 this.sizemap[newLastRenderedIndex].end;
         }
 
+        if (
+            newFirstRenderedIndex === this.firstRenderedIndex &&
+            newLastRenderedIndex === this.lastRenderedIndex
+        ) {
+            return;
+        }
+
         const newVisibleItems = this.sourceItems.slice(
             newFirstRenderedIndex,
             newLastRenderedIndex + 1
         );
 
         this.updateVisibleItemSizes(newFirstRenderedIndex, newLastRenderedIndex);
-        // this.renderedItems.splice(0, this.renderedItems.length, ...newVisibleItems);
+        console.log("update visible items");
+        //this.renderedItems.splice(0, this.renderedItems.length, ...newVisibleItems);
         this.renderedItems = newVisibleItems;
     }
 

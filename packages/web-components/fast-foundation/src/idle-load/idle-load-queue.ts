@@ -1,4 +1,4 @@
-import { DI, transient } from "@microsoft/fast-element/di";
+import { DI } from "@microsoft/fast-element/di";
 
 export interface IdleLoadQueue {
     requestIdleCallback(target: Element, callback: () => void): void;
@@ -8,7 +8,6 @@ export interface IdleLoadQueue {
 
 export const IdleLoadQueue = DI.createContext<string>("idleLoadQueue");
 
-@transient
 export class DefaultIdleLoadQueue implements IdleLoadQueue {
     /**
      * Defines the idle callback timeout value.
@@ -18,7 +17,7 @@ export class DefaultIdleLoadQueue implements IdleLoadQueue {
      * @remarks
      */
     public idleCallbackTimeout: number = 1000;
-    public idleCallbackInterval: number = 900;
+    public idleCallbackInterval: number = 20;
     public callbackQueue: Map<Element, () => void> = new Map<Element, () => void>();
 
     public currentCallbackId: number | undefined;
@@ -43,11 +42,14 @@ export class DefaultIdleLoadQueue implements IdleLoadQueue {
      * @public
      */
     public requestIdleCallback(target: Element, callback: () => void): void {
+        console.log(`request ${this.callbackQueue.size}`);
         if (this.callbackQueue.has(target)) {
             return;
         }
         this.callbackQueue.set(target, callback);
-        this.nextCallback();
+        if (!this.currentCallback) {
+            this.nextCallback();
+        }
     }
 
     /**
@@ -56,19 +58,21 @@ export class DefaultIdleLoadQueue implements IdleLoadQueue {
      * @public
      */
     public cancelIdleCallback(target: Element): void {
+        console.log("cancel");
+
         if (this.callbackQueue.has(target)) {
             this.callbackQueue.delete(target);
             return;
         }
 
         if (this.currentCallbackElement === target && this.currentCallbackId) {
+            console.log("cancel current");
             ((window as unknown) as WindowWithIdleCallback).cancelIdleCallback(
                 this.currentCallbackId
             );
             this.currentCallbackId = undefined;
             this.currentCallbackElement = undefined;
             this.currentCallback = undefined;
-            this.nextCallback();
         }
     }
 
@@ -96,6 +100,8 @@ export class DefaultIdleLoadQueue implements IdleLoadQueue {
             return;
         }
 
+        console.log(`next ${new Date().getUTCMilliseconds()}`);
+
         const [nextCallbackElement] = this.callbackQueue.keys();
         this.currentCallback = this.callbackQueue.get(nextCallbackElement);
         this.callbackQueue.delete(nextCallbackElement);
@@ -111,6 +117,7 @@ export class DefaultIdleLoadQueue implements IdleLoadQueue {
      *  Handle callback
      */
     private handleIdleCallback = (): void => {
+        console.log("handle");
         if (this.currentCallback) {
             this.currentCallback();
         }
