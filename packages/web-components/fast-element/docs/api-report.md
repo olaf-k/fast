@@ -576,6 +576,9 @@ export interface Notifier {
 }
 
 // @public
+export const nullableBooleanConverter: ValueConverter;
+
+// @public
 export const nullableNumberConverter: ValueConverter;
 
 // @public
