@@ -7,11 +7,7 @@ import { renderComponent } from "../../__test__/helpers.js";
 import type { FASTTabs } from "../tabs.js";
 
 const storyTemplate = html<StoryArgs<FASTTabs>>`
-    <fast-tabs
-        ?hide-active-indicator="${x => x.hideActiveIndicator}"
-        activeid="${x => x.activeid}"
-        orientation="${x => x.orientation}"
-    >
+    <fast-tabs activeid="${x => x.activeid}" orientation="${x => x.orientation}">
         ${x => x.storyContent}
     </fast-tabs>
 `;
@@ -19,7 +15,6 @@ const storyTemplate = html<StoryArgs<FASTTabs>>`
 export default {
     title: "Tabs",
     args: {
-        hideActiveIndicator: false,
         storyContent: html<StoryArgs<FASTTabs>>`
             ${repeat(x => x.storyItems.tabs, tabStoryTemplate)}
             ${repeat(x => x.storyItems.tabPanels, tabPanelStoryTemplate)}
@@ -27,7 +22,6 @@ export default {
     },
     argTypes: {
         activeid: { control: "text" },
-        hideActiveIndicator: { control: "boolean" },
         orientation: { control: "radio", options: Object.values(Orientation) },
         storyContent: { table: { disable: true } },
         storyItems: { table: { disable: true } },
